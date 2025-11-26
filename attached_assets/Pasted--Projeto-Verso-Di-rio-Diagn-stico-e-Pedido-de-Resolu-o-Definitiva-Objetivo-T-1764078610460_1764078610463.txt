@@ -1,0 +1,56 @@
+🚨 Projeto "Verso Diário" – Diagnóstico e Pedido de Resolução Definitiva 🚨
+
+📌 **Objetivo:**  
+Ter o projeto funcionando **localmente no Expo Go** sem erros e gerar **APK funcional**, com todas as funcionalidades ativadas, sem travamentos ou fechamento automático.
+
+📌 **Erros e sintomas observados:**  
+1. ERROR Invariant Violation: "main" has not been registered
+   - Metro não encontra o entry point do app.
+   - JS bundle pode estar corrompido ou algum módulo não carrega.
+2. ERROR Invariant Violation: Failed to call into JavaScript module method RCTEventEmitter.receiveTouches()
+   - Módulo JS não registrado como callable.
+   - Frequente quando o app não consegue iniciar o bundle.
+3. Tela branca no Expo Go, apenas cores da barra HTML.  
+4. Ao gerar APK, app abre e fecha sozinho imediatamente.  
+5. Comandos de limpeza de pastas no Windows (`rm -rf`) deram erro.
+
+📌 **O que já foi tentado:**  
+- Adicionado `"entryPoint": "node_modules/expo-router/build/entry/entry.js"` no `app.json`.  
+- Limpeza de cache e pastas com PowerShell:
+Remove-Item -Recurse -Force .expo, android, ios, node_modules -ErrorAction SilentlyContinue
+
+diff
+Copiar código
+- Reinstalação de dependências:
+npm install --legacy-peer-deps
+
+arduino
+Copiar código
+- Pré-build do Expo:
+npx expo prebuild --clean
+
+pgsql
+Copiar código
+- Reinício do Metro com cache limpo:
+npx expo start -c
+
+markdown
+Copiar código
+- Testes mínimos com `_layout.tsx` e `index.tsx`.
+
+📌 **Problema atual:**  
+Mesmo após todos os passos, o erro `"main has not been registered"` persiste. App não renderiza telas, apenas barras HTML. Se o APK for gerado agora, continuará travando ou fechando sozinho.
+
+⚡ **Pedido para Replit:**  
+Forneça **um passo a passo completo no PowerShell para Windows**, pronto para copiar/colar, que:  
+
+1. Limpe todas as pastas de cache e builds antigas, ignorando pastas inexistentes.  
+2. Reinstale todas as dependências corretamente.  
+3. Faça o pré-build do Expo garantindo que o bundle JS seja válido.  
+4. Inicie o Metro na raiz do projeto, com cache limpo, garantindo que o app abra no Expo Go sem erros.  
+5. Garanta que o app funcione **localmente sem travamentos** e todas as telas/providers renderizem corretamente.  
+6. Permita gerar um **APK funcional** depois que o app rodar corretamente.  
+
+📌 **Importante:**  
+- O objetivo é ter o projeto **100% funcional localmente**, pronto para geração de APK.  
+- Inclua observações sobre warnings do PowerShell e pastas inexistentes para não travar o processo.

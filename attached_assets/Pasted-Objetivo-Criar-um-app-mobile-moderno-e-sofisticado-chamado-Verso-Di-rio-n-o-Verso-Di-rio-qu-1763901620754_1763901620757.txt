@@ -1,0 +1,434 @@
+Objetivo: Criar um app mobile moderno e sofisticado, chamado Verso Diário (não “Verso & Diário”), que funcione exatamente como era na versão web, mantendo todas as funcionalidades existentes e corrigindo todos os bugs atuais. Importante: Apenas as funcionalidades da versão web serão mantidas; não é um projeto web, é totalmente mobile. Apenas implemente funcionalidades mobile; não precisa recriar layout web. Todas as funções já existiam na versão web e devem ser mantidas exatamente iguais, adaptadas para mobile 
+
+O app deve preservar ícones, emojis, textos, cores, layout e comportamento das telas, e todas as funcionalidades previamente existentes — versos, devocionais, Bíblia, hinário, anotações, calendário, loja, alarmes, notificações, modo escuro, pulseira QR/NFC, TTS — devem funcionar corretamente.
+
+Importante: O app é estritamente mobile, não web, e todos os componentes e serviços devem funcionar de forma dinâmica, exibindo corretamente ícones, emojis e textos personalizados.1️⃣ Correções e Ajustes de Texto/Interface
+
+Barra superior
+
+Deve aparecer em todas as telas principais.
+
+Deve ser não fixa, ou seja, desaparece ao rolar para baixo.
+
+Conteúdo: emoji de pomba 🕊️ + nome do app Verso Diário.
+
+Ícones e símbolos devem ser exibidos corretamente.
+
+Home / Tela Inicial
+
+Saudações dinâmicas:
+
+Se for dia:
+
+A Paz do Senhor, [nome do usuário]
+Que Deus abençoe o seu dia.
+
+
+Se for noite:
+
+A Paz do Senhor, [nome do usuário]
+Que Deus abençoe sua noite.
+
+
+Container Verso do Dia:
+
+Mostrar coração para favoritar verso.
+
+Mostrar ícone de compartilhar com label “Compartilhar”.
+
+Versos favoritos devem aparecer na aba Anotações → Versos Favoritos.
+
+Container Devocional do Dia:
+
+Emoji/símbolo de livro antes do título.
+
+Título: apenas “Devocional do Dia” (não repetir dentro do texto).
+
+Botão: “Ler completo →”.
+
+Abrir devocional completo ao clicar.
+
+Quadrados 2x2:
+
+Bíblia | Hinário
+
+Anotações | Calendário
+
+Loja e Redes sociais devem aparecer abaixo em cards horizontais.
+
+Rodapé fixo
+
+Itens: Início | Bíblia | Hinário | Loja | Configurações.
+
+Ícones devem estar visíveis e funcionais (não apenas um “x”).
+
+2️⃣ Funcionalidades Principais
+
+Cadastro Inicial
+
+Solicitar apenas o nome do usuário.
+
+Foto de perfil opcional (disponível em Configurações → Editar Perfil).
+
+Mostrar: “Membro desde [data]”.
+
+Verso do Dia
+
+Banco de versos com mínimo 1000.
+
+Sincronização site ↔ app no mesmo aparelho.
+
+Favoritar versos (com coração) → aparecer em Anotações.
+
+Devocionais
+
+Texto de 3–5 parágrafos por dia, baseado no verso do dia.
+
+Salvar favorito, associar a Anotações.
+
+Bíblia Completa + TTS
+
+Tradução inicial: ACF (domínio público).
+
+Busca, livros, capítulos, favoritos, anotações.
+
+Leitura em voz (TTS) por capítulo.
+
+Hinário e Música de Fundo
+
+Letras da Harpa Cristã + playback instrumental.
+
+Player com Play/Pause + letras.
+
+3–5 faixas livres de direitos autorais para música de fundo.
+
+Anotações
+
+Salvar localmente ou na nuvem.
+
+Associar a devocionais ou versos.
+
+Alarmes e Notificações Inteligentes
+
+Horários definidos pelo usuário (dia/noite).
+
+Sons personalizáveis (3–5 opções).
+
+Mensagens personalizadas:
+Ex.: “Oi [nome], já orou hoje?”, “Deus conhece suas lutas, siga firme.”
+
+Calendário Inteligente
+
+Mostrar dias de uso e leituras concluídas.
+
+Sugere leituras/devocionais baseadas no histórico.
+
+Progresso espiritual e dias consecutivos.
+
+Loja Integrada
+
+Produtos físicos: pulseiras QR/NFC, camisetas, canecas, livros, Bíblias.
+
+Pagamento via link externo (Hotmart, PagSeguro, Mercado Pago).
+
+Card visual: imagem à esquerda + texto + botão.
+
+Redes Sociais
+
+Compartilhamento de versos/devocionais.
+
+Links diretos: Instagram, YouTube, TikTok.
+
+Modo Escuro
+
+Manual ou automático por horário.
+
+Pulseira QR/NFC (opcional)
+
+Integração futura com verso do dia.
+
+Tela de Configurações
+
+Foto de perfil opcional.
+
+Nome do usuário + “Membro desde [data]”.
+
+Ícones funcionais: editar nome (lápis), modo escuro, alarmes, loja, redes sociais.
+
+Mensagem final inspiradora:
+
+“Que Deus continue abençoando sua jornada espiritual. Você não caminha sozinho!”
+
+3️⃣ Bugs Corrigidos / Problemas Atuais
+
+Corrigir textos com “Verso & Diário” → “Verso Diário”.
+
+Barra superior desaparecia ou não aparecia em algumas telas → restaurar sempre.
+
+Versos favoritos não apareciam na aba Anotações → corrigir.
+
+Devocional não abria corretamente → corrigir.
+
+Quadrados e rodapé estavam desalinhados / itens faltando → restaurar 2x2 + rodapé completo.
+
+Loja, redes sociais e sugestões não apareciam → corrigir cards.
+
+Bíblia e hinário com ícones “x” → mostrar corretamente e permitir funcionalidade.
+
+Alarmes, notificações, modo escuro e TTS não funcionavam → restaurar funcionalidade completa.
+
+Foto de perfil não era adicionável → corrigir.
+
+Progressão do calendário e mensagens dinâmicas estavam bugadas → corrigir.
+
+Todos os ícones, emojis e labels originais devem ser restaurados.               Mobile app, não web.
+
+Todos os componentes e serviços devem funcionar com ícones, emojis e textos dinâmicos.
+
+✅ Resultado Esperado
+
+App totalmente funcional, sem bugs.
+
+Todas as funcionalidades de versos, devocionais, Bíblia, hinário, anotações, calendário, loja, alarmes, notificações, modo escuro, pulseira QR/NFC.
+
+Textos e emojis restaurados conforme especificações.
+
+UX/UI moderna e sofisticada, com barras, rodapé e cards corretos.
+
+Integração com notificações e TTS funcionando corretamente.
+
+
+
+
+
+
+.................................
+
+
+
+
+
+Olá! Este é um complemento do trabalho anterior no app mobile Verso Diário. O desenvolvimento inicial já implementou cerca de 52% das funcionalidades, mas a implementação parou antes de completar os recursos críticos. Este prompt detalha exatamente o que ainda precisa ser feito e corrigido.
+
+Contexto:
+
+O app inicial já tem 8 telas prontas e navegáveis: Home, Bíblia, Hinário, Loja, Calendário, Anotações, Configurações e Onboarding.
+
+Navegação básica, rodapé fixo e barra superior com 🕊️ + "Verso Diário" funcionando.
+
+Algumas funcionalidades críticas não foram implementadas ou estão bugadas, e precisam ser completadas sem alterar o que já funciona.
+
+O app é estritamente mobile, não web. Todas as funcionalidades da versão web devem ser mantidas, adaptadas para mobile.
+
+1️⃣ Funcionalidades Críticas Faltantes / Pendentes (36%)
+
+TTS (Text-to-Speech) para leitura da Bíblia
+
+Ler capítulos completos da Bíblia em voz.
+
+Funcionalidade integrada à tela da Bíblia.
+
+Sistema de Alarmes personalizáveis
+
+Usuário define horário para lembretes de oração ou leitura.
+
+Sons personalizáveis (3–5 opções).
+
+Ativar/desativar alarmes em Configurações.
+
+Notificações inteligentes
+
+Mensagens personalizadas com nome do usuário.
+
+Ex.: “Oi [nome], já orou hoje?”, “Deus conhece suas lutas, siga firme.”
+
+Banco completo de versos
+
+Pelo menos 1000 versos.
+
+Verso do dia sincronizado entre site ↔ app no mesmo aparelho.
+
+Favoritar versos (com coração) e salvar em Anotações → Versos Favoritos.
+
+Tela de Devocional Completo
+
+Devocionais de 3–5 parágrafos baseados no verso do dia.
+
+Botão “Ler completo →” abre devocional completo.
+
+Permitir salvar favorito e associar a Anotações.
+
+Música de fundo instrumental
+
+3–5 faixas livres de direitos autorais.
+
+Player com Play/Pause.
+
+Integração com o Hinário (playback real dos hinos).
+
+Modo Escuro completo
+
+Aplicar tema escuro em todas as telas.
+
+Ajuste manual ou automático por horário.
+
+2️⃣ Bugs / Problemas que precisam de correção
+
+Barra superior desaparecia em algumas telas → restaurar sempre.
+
+Versos favoritos não apareciam na aba Anotações → corrigir.
+
+Devocional não abria corretamente → corrigir.
+
+Quadrados 2x2 e rodapé estavam desalinhados / itens faltando → restaurar 2x2 + rodapé completo.
+
+Loja, redes sociais e sugestões não apareciam → corrigir cards.
+
+Bíblia e Hinário com ícones “x” → mostrar corretamente e permitir funcionalidade.
+
+Foto de perfil não era adicionável → corrigir.
+
+Progressão do calendário e mensagens dinâmicas estavam bugadas → corrigir.
+
+Todos os ícones, emojis e labels originais devem ser restaurados.
+
+3️⃣ Objetivo do Complemento
+
+Completar 100% das funcionalidades já existentes na versão web, adaptadas para mobile.
+
+Corrigir todos os bugs e inconsistências.
+
+Garantir que todas as telas, ícones, emojis e textos dinâmicos funcionem corretamente.
+
+Manter UX/UI moderna e sofisticada.
+
+✅ Resultado Esperado
+
+App totalmente funcional, sem bugs.
+
+Funcionalidades de versos, devocionais, Bíblia, Hinário, Anotações, Calendário, Loja, Alarmes, Notificações, Modo Escuro, Pulseira QR/NFC e TTS funcionando corretamente.
+
+Textos e emojis restaurados conforme especificações.
+
+UX/UI moderna e sofisticada, com barras, rodapé e cards corretos.
+
+Integração completa com notificações, TTS e músicas de fundo.
+
+
+
+
+.............
+
+
+Explicar que tentamos gerar o APK do app Verso Diário com o progresso atual (52% das funcionalidades implementadas) e listar detalhadamente todos os erros que precisam ser corrigidos para que o APK final seja gerado corretamente e sem falhas.
+
+1️⃣ Contexto do Projeto
+
+O app Verso Diário é um aplicativo estritamente mobile, baseado na versão web, com funcionalidades como:
+
+Versos e Verso do Dia
+
+Devocionais
+
+Bíblia completa + TTS
+
+Hinário com música de fundo
+
+Anotações
+
+Calendário inteligente
+
+Loja integrada
+
+Alarmes e notificações personalizáveis
+
+Modo escuro
+
+Integração futura com pulseira QR/NFC
+
+O desenvolvimento atual completou 52% das funcionalidades, com 8 telas navegáveis:
+
+Home
+
+Bíblia
+
+Hinário
+
+Loja
+
+Calendário
+
+Anotações
+
+Configurações
+
+Onboarding
+
+A navegação básica, rodapé fixo e barra superior com 🕊️ + “Verso Diário” estão funcionando corretamente.
+
+2️⃣ Tentativa de Geração do APK
+
+Foram utilizados os seguintes comandos:
+
+cd android
+.\gradlew assembleRelease
+
+
+ou, via Expo:
+
+npx expo prebuild --clean
+npx expo build:android -t apk
+
+3️⃣ Problemas / Erros Encontrados
+
+Durante a tentativa de gerar o APK, ocorreram os seguintes problemas, que precisam ser corrigidos para gerar o build final corretamente:
+
+a) Dependências e Navegação
+
+Erro: Unable to resolve module ./NavigationContainerRefContext from @react-navigation/core
+
+Causa: Pacotes da navegação estão incompatíveis ou com versões incorretas.
+
+Consequência: O bundler Metro não consegue criar o pacote JS, impedindo o build.
+
+b) Incompatibilidade de Expo SDK / Expo Go
+
+Projeto usa SDK 51.
+
+Expo Go instalado na máquina é SDK 54.
+
+Consequência: Não é possível rodar no emulador ou dispositivo.
+
+c) Bugs no Código Existente
+
+Versos favoritos não aparecem → sincronização incompleta.
+
+Devocionais não abrem → erro de navegação/renderização.
+
+Ícones da Bíblia e Hinário aparecem como “x” → erro de asset ou importação.
+
+Quadrados 2x2 e rodapé desalinhados → inconsistência no layout.
+
+Foto de perfil não adicionável → bug no fluxo de upload/storage.
+
+d) Problemas de Ambiente e Build
+
+Gradle reportou: Process 'command 'cmd'' finished with non-zero exit value 1.
+
+Metro Bundler falhou ao compilar módulos devido a arquivos ausentes.
+
+Algumas bibliotecas não estão instaladas ou são incompatíveis com a versão do Expo/React Native.
+
+4️⃣ Objetivo e Próximo Passo
+
+O APK final deve ser gerado sem nenhum erro, garantindo que:
+
+Todas as dependências estejam corretas e compatíveis.
+
+Todos os módulos e assets sejam carregados corretamente.
+
+Todas as funcionalidades (versos, devocionais, Bíblia, hinário, alarmes, notificações, TTS, loja, modo escuro, etc.) funcionem perfeitamente.
+
+Layout, ícones, emojis e textos dinâmicos apareçam corretamente.
+
+O build seja concluído com sucesso e o APK esteja pronto para instalação.    Gere o app para mobile por fvor completo e funccional 

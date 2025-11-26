@@ -1,0 +1,83 @@
+Olha, estou te enviando o projeto React Native / Expo que peguei em um arquivo zip. 
+O código contém os seguintes arquivos e estruturas (vou descrever resumidamente):
+
+1. **contexts/**  
+   - ThemeContext.tsx: controla tema escuro/claro com AsyncStorage  
+   - UserContext.tsx: controla dados do usuário (nome, perfil, data)  
+   - NotificationContext.tsx: configura notificações diárias e sons com expo-notifications  
+
+2. **data/**  
+   - verses.ts: array completo de versos diários e função getTodayVerse()  
+
+3. **pages/**  
+   - devotional-view.tsx: tela principal do devocional, importa getTodayVerse e useTheme  
+   - RootLayout.tsx: layout raiz, providers, splash screen, Stack Navigator  
+
+4. **app.json** / **package.json** configurados com expo-router e expo-notifications  
+
+---
+
+### Histórico de problemas ao tentar rodar localmente:
+
+1. **Erro Metro bundler**: `Unable to resolve "../../data/verses"`  
+   - Tentativa de solução: ajustamos imports para `import { getTodayVerse } from '../data/verses';`  
+   - Status: bundler reconhece, mas outros erros persistem
+
+2. **React.jsx: type is invalid**  
+   - Ocorria em vários contexts e componentes  
+   - Tentativa: corrigimos export default / named exports e importações no RootLayout  
+   - Status: não resolvido totalmente no Expo Go
+
+3. **Verso do dia não carregava**  
+   - Ajustamos useEffect e setVerse  
+   - Status: carrega, mas app ainda trava às vezes
+
+4. **Tema escuro/claro automático e manual**  
+   - Ajustado com useColorScheme e AsyncStorage  
+   - Status: funciona parcialmente, mas bugs de render ainda acontecem
+
+5. **Splash screen e inicialização**  
+   - SplashScreen.preventAutoHideAsync() + onLayoutRootView  
+   - Status: splash funciona, mas app fecha sozinho em algumas execuções
+
+6. **Notificações com sons custom**  
+   - Configuradas no NotificationContext e app.json  
+   - Status: só funcionam corretamente em build nativa (APK), não no Expo Go
+
+7. **Tentativa de gerar APK local (`./gradlew assembleRelease`)**  
+   - Falhou, erros relacionados a dependências e caminho Android  
+   - Status: sem sucesso, APK não gerado funcionalmente
+
+---
+
+### Objetivo final:
+
+1. Que ao baixar o zip no Replit e abrir terminal:  
+   - Eu consiga instalar dependências (`npm install` ou `yarn`)  
+   - Rodar o projeto (`expo start` ou `npx expo start`) **sem nenhum erro de bundler, import ou JSX**  
+
+2. Que o **app funcione 100% no celular**, incluindo:  
+   - Splash screen  
+   - Tema escuro/claro  
+   - Tela DevotionalView com verso do dia, perguntas e oração  
+   - Dados do usuário  
+   - Notificações diárias com som  
+   - Navegação entre telas sem crash  
+
+3. Que seja possível **gerar APK localmente na máquina Windows** sem erro. 
+
+---
+
+### Ações esperadas do analisador:
+
+1. Corrigir **todos os imports, exports e hooks** que causam `type is invalid`  
+2. Garantir que **getTodayVerse** funcione sem falha  
+3. Garantir que **ThemeContext, UserContext e NotificationContext** funcionem corretamente  
+4. Ajustar **RootLayout** e **Stack Navigator** para que app não feche sozinho  
+5. Corrigir **configurações para build APK local**, incluindo dependências nativas do Android  
+6. Testar que **Expo Go ou APK gerado** abrem sem crash e exibem todas telas corretamente  
+
+---
+
+Por favor, faça uma análise completa do projeto, corrija todos os erros existentes e gere instruções passo a passo para que o app funcione **100% estável** e seja possível gerar o APK localmente.  
+

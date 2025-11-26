@@ -1,0 +1,95 @@
+Tela Inicial / Onboarding
+
+Solicitar nome do usuário ao instalar e salvar localmente.
+
+Saudação personalizada: "Boa tarde, [nome]" ou "Como podemos te chamar?"
+
+Exibir Verso do dia abaixo da saudação.
+
+Quatro opções principais (2 por linha):
+
+Devocional
+
+Bíblia
+
+Hino / Música (duas opções: “Música para Oração / Meditação” e “Hinos da Harpa Cristã”)
+
+Anotações
+
+Hinos da Harpa: todas as letras + áudio instrumental (play/pause)
+
+Player de música de fundo: 3–5 faixas livres de direitos autorais
+
+2️⃣ Loja e Redes Sociais
+
+Container da loja logo abaixo do verso do dia: “Conheça nossa loja” + imagem de produto
+
+Redes sociais: Instagram (ícone correto), YouTube, exibidos abaixo da loja
+
+Mantém acesso na aba de configurações
+
+3️⃣ Rodapé / Navegação Inferior
+
+Barra fixa: Início, Bíblia, Hinário, Loja, Configurações
+
+Visível em todas as telas principais
+
+4️⃣ Perfil do Usuário / Configurações
+
+Mostrar nome e foto do usuário
+
+Tema escuro disponível, fundo preto com destaques em azul escuro, cinza grafite e dourado
+
+Notificações: ativar/desativar, horários dia/noite, 3–5 sons disponíveis
+
+Campo de feedback / sugestões → envio por e-mail invisível, com confirmação
+
+Exibir novamente ícones de loja e redes sociais
+
+5️⃣ Perguntas Inteligentes / Notificações
+
+Notificações personalizadas: "Oi [nome], já orou hoje? Deus te abençoe!"
+
+Perguntas 3–4 vezes por semana, cada resposta direciona para verso ou devocional específico
+
+Evitar repetição de perguntas
+
+6️⃣ Calendário de Lembretes (nova funcionalidade)
+
+Exibir calendário mensal
+
+Usuário marca datas importantes
+
+Cada lembrete envia notificação personalizada com nome do usuário
+
+Visual minimalista, coerente com tema do app
+
+7️⃣ Layout / Margens
+
+Remover margens laterais grandes, preenchendo horizontalmente a tela
+
+Layout limpo, moderno, acolhedor, transmitindo propósito e fé
+
+8️⃣ Funcionalidades Técnicas Pendentes / Extras
+
+Bíblia completa (ACF) com Text-to-Speech (TTS)
+
+Player de música de fundo (3–5 faixas)
+
+Sincronização em nuvem para notas e preferências
+
+WebView da loja integrada
+
+Compartilhamento de versos/devocionais nas redes sociais
+
+Progressive Web App (PWA) features: instalação e notificações
+
+📌 Instruções Importantes
+
+Todas as funcionalidades devem ser incrementais, sem quebrar o MVP atual
+
+Foco visual + UX, cores, layout e experiência devem estar de acordo com o plano estratégico
+
+Projeto deve estar pronto para gerar APK (Android) e IPA (iOS) via Expo/EAS Build
+
+Implementar calendário de lembretes conforme descrito

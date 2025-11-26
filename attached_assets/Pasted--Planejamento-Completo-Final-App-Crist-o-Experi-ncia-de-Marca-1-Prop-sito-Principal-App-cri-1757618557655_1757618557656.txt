@@ -1,0 +1,270 @@
+📱 Planejamento Completo Final – App Cristão + Experiência de Marca
+1️⃣ Propósito Principal
+
+App cristão gratuito, com foco em experiência, propósito e conexão emocional.
+
+Objetivo: criar uma rotina espiritual diária, engajando o usuário com:
+
+Versículos do dia
+
+Devocionais
+
+Hinário + música de fundo
+
+Quiz de conexão emocional
+
+Alarmes e notificações motivacionais
+
+Frases inspiradoras
+
+Anotações
+
+Calendário inteligente
+
+Loja de produtos físicos
+
+Redes sociais integradas
+
+Personalização baseada no nome do usuário e histórico de uso.
+
+Monetização indireta: produtos físicos (loja) apresentados de forma complementar.
+
+2️⃣ Funcionalidade Completa
+A) Cadastro Inicial
+
+Solicita nome do usuário: “Como podemos te chamar?”
+
+Foto de perfil opcional, emocional e acolhedora.
+
+Nome usado em notificações, quiz, devocionais e lembretes motivacionais.
+
+Armazenamento seguro no dispositivo.
+
+B) Quiz de Conexão Emocional
+
+Frequência: 2–4 vezes por semana, de forma espontânea.
+
+Pergunta: “Oi [nome], como você está se sentindo hoje?”
+
+Respostas: Alegre, Triste, Na Luta, Gratidão, Esperançoso etc.
+
+Cada resposta leva a versículos ou devocionais temáticos.
+
+Não exibe histórico ou progresso; experiência espontânea para conexão emocional.
+
+C) Verso do Dia
+
+Banco com mínimo 1000 versículos.
+
+Sincronização: site ↔ app no mesmo aparelho = mesmo verso.
+
+Diferente usuário ou aparelho → verso diferente.
+
+Base para devocionais, notificações, quiz e compartilhamento.
+
+D) Devocionais Diários
+
+Texto baseado no verso do dia, 3–5 parágrafos curtos.
+
+Permite salvar favoritos ou associar anotações.
+
+E) Bíblia Completa + TTS
+
+Tradução inicial: ACF (domínio público).
+
+Outras traduções licenciadas: NVI, ARA, NLT (apenas se aprovado).
+
+Funcionalidades: busca, livros, capítulos, favoritos, anotações.
+
+Leitura por voz (TTS) ativável por capítulo.
+
+F) Hinário e Música de Fundo
+
+Letras da Harpa Cristã + playback instrumental livre de direitos.
+
+Áudio cantado opcional (licenciado ou produzido).
+
+Player simples: Play/Pause + letras.
+
+Música de fundo: 3–5 faixas livres, reproduzidas durante meditação ou oração.
+
+G) Anotações
+
+Salvas localmente ou sincronizadas na nuvem.
+
+Associadas a devocionais, versos ou tags.
+
+Busca e organização por data ou tema.
+
+H) Alarmes e Notificações Inteligentes
+
+Horários definidos pelo usuário (dia/noite).
+
+Sons: 3–5 opções disponíveis.
+
+Mensagens personalizadas com o nome do usuário.
+
+Lembretes de oração, leitura ou devocionais.
+
+I) Calendário Inteligente
+
+Mostra: dias de uso e leituras concluídas.
+
+Sugere leituras futuras ou devocionais baseadas no histórico.
+
+Não exibe quiz ou progresso específico.
+
+Gamificação leve opcional (progressão espiritual motivadora).
+
+J) Loja Integrada
+
+Produtos físicos: pulseiras (QR/NFC), camisetas, canecas, livros, Bíblias.
+
+Pagamento via Hotmart, PagSeguro ou Mercado Pago.
+
+Visual profissional: imagem à esquerda + texto + call to action.
+
+K) Frases Motivacionais / Lembretes
+
+Pré-definidas, evitando repetição:
+
+“Oi Carlos, já orou hoje?”
+
+“Fala Carlos, Deus conhece nossas lutas, vamos em frente.”
+
+“Carlos, reserve um momento para refletir no versículo do dia.”
+
+Frequência configurável pelo usuário.
+
+L) Redes Sociais
+
+Compartilhamento de versos, devocionais e quiz.
+
+Links diretos: Instagram, YouTube, TikTok da marca.
+
+Visual profissional, imagens ou ícones à esquerda + chamada para ação.
+
+M) Modo Escuro
+
+Ajuste manual ou automático baseado no horário.
+
+Contraste equilibrado para leitura noturna.
+
+N) Pulseira QR/NFC (Opcional)
+
+Conecta usuário à experiência digital.
+
+Pode desbloquear verso do dia ou conteúdos especiais.
+
+O) Tela de Configurações
+
+Foto de perfil: central ou à esquerda, visual emocional.
+
+Nome do usuário: destacado abaixo da foto.
+
+Opções configuráveis:
+
+Alarmes (ativar/desativar, escolher sons, horários)
+
+Modo escuro
+
+Feedback / sugestões de experiência
+
+Loja e redes sociais integradas.
+
+Mensagem final inspiradora: reforça propósito do app.
+
+3️⃣ Estética / UX/UI Completa
+
+Tela inicial / onboarding: frase da marca + cadastro do nome + foto opcional.
+
+Home:
+
+Saudação personalizada (“Boa tarde, [nome]”)
+
+Título ou frase do propósito
+
+Verso do dia destacado
+
+Devocional diário
+
+Quadrados de navegação (Bíblia, Hinário, Anotações, Calendário)
+
+Loja (card horizontal)
+
+Redes sociais (card horizontal)
+
+Rodapé fixo: Início | Bíblia | Hinário | Loja | Configurações
+
+Quiz: visual conversacional, amigável, sem poluição
+
+Configurações: foto, nome, alarmes, modo escuro, feedback, loja e redes sociais, mensagem final
+
+Diretrizes visuais:
+
+Cores suaves e harmoniosas
+
+Tipografia moderna e legível
+
+Layout minimalista, espaçado, hierarquia visual clara
+
+Animações discretas, feedback de toque
+
+Ícones e imagens profissionais
+
+4️⃣ Estrutura / Organização de Arquivos no Replit
+/src
+  /screens
+    HomeScreen.js          // Home: verso, devocional, quadrados, loja, redes sociais
+    CadastroScreen.js      // Cadastro inicial
+    QuizScreen.js          // Quiz de conexão emocional
+    BibliaScreen.js        // Tela da Bíblia + TTS
+    HinoScreen.js          // Hinário + música de fundo
+    AnotacoesScreen.js     // Anotações
+    CalendarioScreen.js    // Calendário inteligente
+    LojaScreen.js          // Loja integrada
+    ConfiguracoesScreen.js // Configurações
+  /components
+    Header.js              // Saudação, título, frase do propósito
+    VersoDoDia.js          // Verso do dia
+    Devocional.js          // Devocional diário
+    QuadradoAtalho.js      // Quadrados 2x2
+    CardLoja.js            // Card da loja
+    CardSocial.js          // Redes sociais
+    Rodape.js              // Rodapé fixo
+    QuizOpcao.js           // Opções do quiz
+    FrasesMotivacionais.js // Lembretes
+  /assets
+    /images                // Fotos, ícones, imagens da loja, redes sociais
+    /audio                 // Música de fundo, playback instrumental, TTS
+  /services
+    apiVersos.js           // API verso do dia
+    apiDevocionais.js      // API devocionais
+    apiQuiz.js             // Lógica quiz
+    apiNotificacoes.js     // Alarmes/notificações
+    apiLoja.js             // Dados loja
+    firebaseConfig.js      // Configurações backend/Firebase
+  App.js                   // Entrada do app
+
+
+Objetivo: cada módulo isolado e nomeado de forma clara, para editar facilmente sem afetar outras áreas.
+
+5️⃣ Checklist Final (Funcional + Estético + Arquivos)
+
+✅ Cadastro com nome + foto opcional
+✅ Quiz de conexão emocional 2–4x/semana
+✅ Verso do dia sincronizado app ↔ site
+✅ Devocionais diários
+✅ Bíblia completa + TTS
+✅ Hinário + música de fundo
+✅ Anotações
+✅ Alarmes e notificações inteligentes
+✅ Calendário inteligente
+✅ Loja integrada
+✅ Frases motivacionais configuráveis
+✅ Redes sociais integradas
+✅ Modo escuro
+✅ Pulseira QR/NFC opcional
+✅ Rodapé fixo funcional
+✅ Layout estético, emocional e profissional
+✅ Estrutura Replit organizada por módulo e funcionalidade

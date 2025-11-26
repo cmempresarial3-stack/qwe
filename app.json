@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "Verso Diário",
+    "slug": "verso-diario",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.versodiario.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.versodiario.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/sounds/notification1.wav",
+            "./assets/sounds/notification2.wav",
+            "./assets/sounds/notification3.wav"
+          ]
+        }
+      ]
+    ],
+    "scheme": "versodiario",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
+  }
+}

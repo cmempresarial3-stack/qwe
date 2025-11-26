@@ -1,0 +1,186 @@
+{
+  "productOfWeek": {
+    "id": "weekly-1",
+    "nome": "Kit Devocionário Completo",
+    "descricao": "Transforme sua vida espiritual com este kit completo: Bíblia de estudo, caderno de oração e marcadores especiais. Tudo que você precisa para uma jornada profunda com Deus.",
+    "imagem": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    "precoOriginal": 149.90,
+    "precoPromocional": 99.90,
+    "estoque": true,
+    "linkLoja": "https://checkout.mercadopago.com/kit-devocionario-completo",
+    "comentarios": [
+      {
+        "nome": "Maria Santos",
+        "texto": "Este kit mudou completamente minha vida de oração! Recomendo muito.",
+        "data": "2024-09-10"
+      },
+      {
+        "nome": "João Silva",
+        "texto": "Qualidade excepcional e chegou super rápido. Valeu cada centavo!",
+        "data": "2024-09-08"
+      }
+    ],
+    "badge": "🔥 OFERTA DA SEMANA",
+    "urgencia": "Apenas 48h restantes!"
+  },
+  "featuredProducts": [
+    {
+      "id": "f-1",
+      "nome": "Pulseira QR Cristã",
+      "descricao": "Conecte-se instantaneamente ao verso do dia através do QR Code. Design elegante e resistente.",
+      "imagem": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 39.90,
+      "precoPromocional": 29.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/pulseira-qr-crista",
+      "comentarios": [
+        {
+          "nome": "Ana Costa",
+          "texto": "Uso todos os dias! É uma forma linda de carregar a palavra de Deus sempre comigo.",
+          "data": "2024-09-12"
+        }
+      ]
+    },
+    {
+      "id": "f-2",
+      "nome": "Bíblia de Estudo ACF",
+      "descricao": "Bíblia Almeida Corrigida Fiel com notas explicativas e estudos temáticos profundos.",
+      "imagem": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 0,
+      "precoPromocional": 89.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/biblia-estudo-acf",
+      "comentarios": [
+        {
+          "nome": "Pedro Oliveira",
+          "texto": "As notas de estudo são muito esclarecedoras. Recomendo para quem quer se aprofundar.",
+          "data": "2024-09-09"
+        },
+        {
+          "nome": "Camila Jesus",
+          "texto": "Qualidade da impressão é excelente. Chegou bem embalada.",
+          "data": "2024-09-05"
+        }
+      ]
+    },
+    {
+      "id": "f-3",
+      "nome": "Camiseta Fé em Movimento",
+      "descricao": "Camiseta 100% algodão com design inspirador. Conforto e evangelização em uma só peça.",
+      "imagem": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 49.90,
+      "precoPromocional": 39.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/camiseta-fe-movimento",
+      "comentarios": [
+        {
+          "nome": "Lucas Ferreira",
+          "texto": "Tecido de ótima qualidade e o design é lindo! Já comprei 3 cores.",
+          "data": "2024-09-11"
+        }
+      ]
+    },
+    {
+      "id": "f-4",
+      "nome": "Caneca Inspiração Diária",
+      "descricao": "Para seus momentos especiais com Deus. Cerâmica de alta qualidade com versículos inspiradores.",
+      "imagem": "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 34.90,
+      "precoPromocional": 24.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/caneca-inspiracao-diaria",
+      "comentarios": [
+        {
+          "nome": "Beatriz Lima",
+          "texto": "Minha caneca favorita para o café da manhã! Linda demais.",
+          "data": "2024-09-06"
+        }
+      ]
+    },
+    {
+      "id": "f-5",
+      "nome": "Quadro Versículo Personalizado",
+      "descricao": "Decoração cristã premium. Escolha seu versículo favorito em moldura elegante.",
+      "imagem": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 79.90,
+      "precoPromocional": 59.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/quadro-versiculo-personalizado",
+      "comentarios": [
+        {
+          "nome": "Roberto Santos",
+          "texto": "Ficou perfeito na sala! Qualidade de impressão impressionante.",
+          "data": "2024-09-07"
+        }
+      ]
+    },
+    {
+      "id": "f-6",
+      "nome": "Diário de Gratidão",
+      "descricao": "Cultive o hábito de gratidão diária. Páginas inspiradoras para suas reflexões e orações.",
+      "imagem": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 44.90,
+      "precoPromocional": 34.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/diario-gratidao",
+      "comentarios": [
+        {
+          "nome": "Fernanda Costa",
+          "texto": "Me ajudou muito a desenvolver uma rotina de gratidão. Recomendo!",
+          "data": "2024-09-04"
+        }
+      ]
+    },
+    {
+      "id": "f-7",
+      "nome": "Chaveiro Cruz Elegante",
+      "descricao": "Leve sua fé para onde for. Chaveiro em metal nobre com acabamento premium.",
+      "imagem": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 19.90,
+      "precoPromocional": 14.90,
+      "estoque": false,
+      "linkLoja": "",
+      "comentarios": [
+        {
+          "nome": "Marcos Alves",
+          "texto": "Pequeno mas significativo. Presente perfeito para amigos.",
+          "data": "2024-09-03"
+        }
+      ]
+    },
+    {
+      "id": "f-8",
+      "nome": "Livro Devocional 365 Dias",
+      "descricao": "Um ano inteiro de reflexões profundas. Cada dia uma nova inspiração para sua caminhada.",
+      "imagem": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 54.90,
+      "precoPromocional": 44.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/livro-devocional-365",
+      "comentarios": [
+        {
+          "nome": "Carla Souza",
+          "texto": "Cada reflexão é um presente! Estou no dia 180 e não consigo parar de ler.",
+          "data": "2024-09-01"
+        }
+      ]
+    },
+    {
+      "id": "f-9",
+      "nome": "Marcador de Página Versículo",
+      "descricao": "Conjunto com 10 marcadores inspiradores. Design elegante com versículos selecionados.",
+      "imagem": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      "precoOriginal": 24.90,
+      "precoPromocional": 19.90,
+      "estoque": true,
+      "linkLoja": "https://checkout.mercadopago.com/marcador-pagina-versiculo",
+      "comentarios": [
+        {
+          "nome": "Rafael Santos",
+          "texto": "Lindos demais! Uso um diferente a cada estudo bíblico.",
+          "data": "2024-08-30"
+        }
+      ]
+    }
+  ]
+}

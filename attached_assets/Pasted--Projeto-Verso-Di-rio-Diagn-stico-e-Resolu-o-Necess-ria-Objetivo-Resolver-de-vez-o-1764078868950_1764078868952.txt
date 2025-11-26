@@ -1,0 +1,33 @@
+🚨 Projeto "Verso Diário" – Diagnóstico e Resolução Necessária 🚨
+
+📌 Objetivo:
+Resolver de vez os erros do projeto no meu ambiente Windows, de forma que ele funcione **100% no Expo Go** e permita gerar um **APK funcional**, com todas as funcionalidades ativadas, sem travamentos ou fechamento automático.
+
+📌 Erros e sintomas observados:
+1. ERROR Invariant Violation: "main" has not been registered
+2. ERROR Invariant Violation: Failed to call into JavaScript module method RCTEventEmitter.receiveTouches()
+3. Tela branca no Expo Go, apenas cores da barra HTML.
+4. APK abre e fecha sozinho imediatamente.
+5. Comandos de limpeza no Windows (`rm -rf`) deram erro.
+
+📌 O que já foi tentado:
+- entryPoint correto no app.json: "node_modules/expo-router/build/entry/entry.js"
+- Limpeza de cache e pastas via PowerShell:
+  Remove-Item -Recurse -Force .expo, android, ios, node_modules -ErrorAction SilentlyContinue
+- Reinstalação de dependências: npm install --legacy-peer-deps
+- Pré-build do Expo: npx expo prebuild --clean
+- Reinício do Metro com cache limpo: npx expo start -c
+- Testes mínimos com _layout.tsx e index.tsx
+
+⚡ Pedido para Replit:
+Crie **um passo a passo completo no PowerShell para Windows**, pronto para copiar/colar, que:
+1. Limpe todas as pastas de cache e builds antigas, ignorando pastas inexistentes e warnings do PowerShell.
+2. Reinstale todas as dependências corretamente.
+3. Faça o pré-build do Expo garantindo que o bundle JS seja válido.
+4. Inicie o Metro na raiz do projeto com cache limpo, garantindo que o app abra no Expo Go sem erros.
+5. Garanta que o app funcione **localmente sem travamentos** e todas as telas/providers renderizem corretamente.
+6. Permita gerar um **APK funcional** depois que o app rodar corretamente.
+
+📌 Observação:
+- O Replit deve gerar **comandos e instruções executáveis**, não apenas orientações.
+- O objetivo é que, ao executar os comandos gerados, o app abra corretamente no Expo Go e depois permita gerar APK funcional.

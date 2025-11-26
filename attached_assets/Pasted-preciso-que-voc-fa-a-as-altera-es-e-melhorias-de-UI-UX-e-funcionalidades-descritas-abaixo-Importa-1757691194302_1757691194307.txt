@@ -1,0 +1,95 @@
+preciso que você faça as alterações e melhorias de UI/UX e funcionalidades descritas abaixo. Importante: NÃO remover ou quebrar funcionalidades existentes; implemente via branch/feature-flag e deixe o app funcional enquanto mantém o histórico. Prefiro commits pequenos e descriptivos.
+
+Objetivo geral
+
+Deixar o app moderno e sofisticado (alto padrão visual e UX), com foco em retenção via pulseira → site → instalação do app → uso regular → conversão na loja.
+
+Requisitos de UI/UX (prioridade alta)
+
+Barra superior (top bar)
+
+Adicionar uma barra superior fixa discreta com: logo/símbolo pequeno à esquerda e — opcionalmente — uma frase curta (ex: “Verso & Paz”) centralizada. Visual discreto e sofisticado (espessura fina, padding adequado).
+
+Design geral
+
+Aparência moderna e sofisticada, tipografia limpa, espaçamentos consistentes, boa hierarquia visual. Responsivo para mobile (iPhone XR e Android).
+
+Membro desde
+
+Exibir “Membro desde ___” no perfil (usar a data de criação da conta). Não solicitar foto no primeiro acesso; foto só via Configurações > Editar perfil.
+
+Spacing / dimensionamento
+
+Corrigir espaçamento entre o bloco “Dar sugestão” e o bloco “Loja” (estão colados). Ajustar paddings/margens para ter layout harmônico e “dimensionamento perfeito” em telas móveis.
+
+Notificações / Quiz
+
+O quiz não deve ficar visível como módulo no app. É uma funcionalidade automática enviada por push notification. Quando o usuário clica na notificação, abrir um modal com a pergunta e respostas (responder ali mesmo).
+
+Padrão de envio: 3 dias alternando na semana (implemente um padrão inicial: enviar quiz a cada 3 dias; rotacionar dias da semana caso necessário). Deve mencionar o nome do usuário no texto (ex: “Olá Carlos — como você está se sentindo hoje?”).
+
+Permitir ao usuário alterar horários e frequência das notificações em Configurações (atualmente não está possível — corrigir isso).
+
+Onboarding / primeiramente
+
+Ao entrar pela primeira vez: não pedir foto; mostrar um welcome curto convidando a completar perfil se quiser. Incluir convite explícito para instalar o app vindo da pulseira/site.
+
+Funcionalidades que fortalecem vínculo/comunidade
+
+Área de anotações de leitura bíblica (sincronizável localmente/servidor).
+
+Biblioteca de hinos da Harpa (play, favoritar).
+
+Notificações/lembranças afetuosas (ex.: “Lembrete de leitura”, “Como você está?”) — tom acolhedor.
+
+Requisitos técnicos / detalhes de implementação
+
+Plataforma: se o projeto usa React Native / Expo, use o padrão Expo Notifications (ou a infra existente) para push. Garantir compatibilidade iOS/Android.
+
+Personalização do texto das notificações: permitir placeholders (ex: {firstName}, {memberSince}) para compor mensagens.
+
+Settings UI: adicionar controles para: ativar/desativar quiz-notifs; escolher janela de horário (ex: manhã 8–10, tarde 12–14, noite 18–21); escolher frequência (padrão 3 dias, opção diária/semanal/custom).
+
+Segurança / não perder progresso: criar branch feat/quiz-notifs-topbar-spacing (ou semelhante). Fazer pull request com mudanças isoladas.
+
+Testes: incluir testes manuais para notificações (emulador + dev device), e um script/README com passos para testar localmente.
+
+Acessibilidade: contraste adequado, tamanhos mínimos de fonte, labels para leitores de tela.
+
+Analytics: registrar eventos quando a notificação for enviada, entregue, e quando o quiz for respondido (event names: quiz_sent, quiz_opened, quiz_completed).
+
+Conteúdo / textos
+
+Deixo a lista de frases/padrões de quiz para eu subir depois. Por enquanto implemente o mecanismo com um conjunto de placeholder/sample messages (3 mensagens) e comportamento padrão 3 dias.
+
+Entregáveis e critérios de aceite
+
+Branch/PR com as mudanças.
+
+Arquivos alterados listados no PR com breve comentário do motivo.
+
+Builds funcionando para Web / Android / iOS (expo web + expo run:android / expo run:ios) — ou instruções claras se usar outro flow.
+
+Screenshots antes/depois (mobile) das telas principais (home, perfil, configurações, modal do quiz).
+
+Script/README com passos para:
+
+rodar localmente,
+
+testar envio de notificações (emulador e device),
+
+ajustar textos das notificações e frequência.
+
+Confirmação de que a opção de foto só aparece em Configurações (teste manual).
+
+Campo “Membro desde” visível no perfil com data correta.
+
+Observações finais / UX extras (sugestões não obrigatórias)
+
+Pequenas micro-animações suaves ao abrir/fechar modal do quiz.
+
+CTA discreto na home para “Ver loja” quando o usuário acessou via pulseira/site.
+
+Mensagem de permissão de notificação com copy humanizada (ex: “Podemos te enviar lembretes carinhosos? Prometemos não lotar sua caixa.”).
+
+Use feature flags para ativar/desativar envio automático durante QA.

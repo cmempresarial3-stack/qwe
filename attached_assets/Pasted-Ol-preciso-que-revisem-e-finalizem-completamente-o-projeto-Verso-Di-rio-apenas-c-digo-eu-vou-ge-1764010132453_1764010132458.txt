@@ -1,0 +1,151 @@
+Olá — preciso que revisem e finalizem completamente o projeto Verso Diário (apenas código; eu vou gerar o APK localmente).
+
+O QUE EU FIZ:
+Baixei o ZIP do projeto aqui do Replit e gerei o APK no meu computador com:
+
+npm install --legacy-peer-deps
+npx expo prebuild
+cd android
+.\gradlew clean
+.\gradlew assembleRelease
+
+
+O APK foi gerado e instalado no celular, mas ao abrir: aparece a splash screen e logo em seguida o app fecha sozinho — sem mostrar nenhuma tela, erro ou aviso. Ou seja, o app crasha logo na inicialização.
+
+INTERPRETAÇÃO:
+Isso indica que há erros no código, dependências, configuração, módulos nativos ou navegação. Preciso que vocês revisem e corrijam completamente o projeto para que o app abra normalmente.
+
+📌 O QUE EU PRECISO QUE VOCÊS FAÇAM (OBRIGATÓRIO)
+
+Revisar todo o projeto React Native/Expo gerado no Replit.
+
+Corrigir todos os erros que estejam causando o crash no início.
+
+Entregar o código final, 100% funcional, pronto para gerar APK localmente.
+
+Não gerar o APK; eu mesmo irei gerar o APK no meu PC após baixá-lo.
+
+Garantir que nenhuma tela esteja quebrada, que a navegação, contexts e módulos nativos funcionem, e que não haja crashes.
+
+🎯 OBJETIVO DO PROJETO
+
+Criar o app mobile Verso Diário (nome exato — não “Verso & Diário”), preservando todas as funcionalidades da versão web, agora totalmente adaptadas para mobile.
+O app é 100% mobile — não quero versão web nem comportamento de navegador. Quero a versão mobile oficial do site.
+
+✅ FUNCIONALIDADES QUE DEVEM ESTAR 100% FUNCIONAIS
+
+(Não entregar parcialmente; tudo abaixo deve funcionar)
+
+Navegação & interface
+
+Barra superior em todas as telas (🕊️ Verso Diário) — oculta ao rolar para baixo.
+
+Rodapé fixo com: Início | Bíblia | Hinário | Loja | Configurações.
+
+Ícones reais (sem “x”).
+
+Home
+
+Saudações dinâmicas (dia/noite).
+
+Verso do dia: coração para favoritar; botão “Compartilhar”.
+
+Devocional do dia com emoji de livro + botão “Ler completo →”.
+
+Quadrados 2x2: Bíblia | Hinário / Anotações | Calendário.
+
+Cards horizontais: Loja e Redes Sociais.
+
+Bíblia
+
+Tradução ACF completa; busca; livros → capítulos → versículos; favoritar; TTS por capítulo.
+
+Hinário
+
+Letras da Harpa Cristã; player com play/pause; playback instrumental (3–5 faixas livres).
+
+Devocionais
+
+Texto completo (3–5 parágrafos), abrir ao clicar; favoritar / salvar em Anotações.
+
+Verso do Dia
+
+Base com 1000+ versos; sincronização correta; favoritos aparecem em Anotações → Versos Favoritos.
+
+Anotações
+
+Criar / editar / excluir; associar a versos/devocionais; sincronização local.
+
+Alarmes & Notificações
+
+Horários personalizados; 3–5 sons; mensagens personalizadas (“Oi [nome], já orou hoje?”, etc).
+
+Calendário Inteligente
+
+Registrar dias de uso; mostrar progresso; sugerir leituras.
+
+Loja
+
+Produtos com imagem + texto + botão; redirecionar para links externos (PagSeguro, Mercado Pago, Hotmart, etc).
+
+Redes Sociais
+
+Links diretos (Instagram, YouTube, TikTok) e compartilhamento de versos/devocionais.
+
+Modo Escuro
+
+Manual e automático (por horário); aplicado globalmente.
+
+Perfil
+
+Nome + foto; “Membro desde [data]”; editar perfil funcionando.
+
+Pulseira QR/NFC
+
+Base para integração futura (implementação inicial aceitável, desde que não cause crash).
+
+❗ BUGS CRÍTICOS A SEREM CORRIGIDOS (lista mínima)
+
+App abre → splash → fecha (PRIORIDADE MÁXIMA).
+
+Barra superior sumindo em telas específicas.
+
+Rodapé/ícones aparecendo como “x”.
+
+Devocional não abre completo.
+
+Versos favoritos não aparecem em Anotações.
+
+Ícones quebrados / textos repetidos.
+
+Quadrados 2x2 desalinhados.
+
+Loja, redes sociais e cards não aparecem.
+
+Modo escuro, notificações e TTS não funcionando.
+
+Calendário não registra progresso.
+
+Foto de perfil não salva.
+
+Nome do app deve ser Verso Diário em todos os lugares.
+
+Emojis (incl. 🕊️) devem renderizar corretamente.
+
+🎨 LAYOUT E DESIGN — REGRAS IMPORTANTES
+
+Preservar a identidade visual da versão web: cores, ícones, emojis, tipografia, organização e hierarquia de telas — adaptadas para mobile.
+
+Não transformar o visual em algo genérico. Quero a mesma sensação visual do site em versão mobile oficial. Ajustes para usabilidade mobile são permitidos, mas a identidade deve ser mantida.
+
+📦 O QUE VOCÊS DEVEM ENTREGAR
+
+Repositório no Replit atualizado com o código final corrigido (Expo/React Native).
+
+README + INSTALACAO/INSTALAÇÃO com instruções para eu gerar o APK localmente (comandos exatos).
+
+Todos os assets (ícones, imagens, áudios) incluidos e funcionais.
+
+app.json / eas.json configurados corretamente.
+
+Build local (quando eu rodar) não deve crashar.

@@ -1,0 +1,57 @@
+Olá!
+
+Estou enviando este projeto para uma revisão completa, profunda e funcional. Precisamos que o app não crash e funcione de ponta a ponta. Aqui está o contexto detalhado:
+
+Histórico e progresso do projeto
+
+O app foi originalmente feito em React Native + Expo, usando uma versão antiga do SDK (51).
+
+Houve um crash crítico relacionado ao bible-acf.json: o arquivo era um array, mas o código esperava um objeto.
+
+Solução parcial: função loadBibleData() agora transforma automaticamente array → objeto + cache singleton.
+
+Problemas de TypeScript foram corrigidos:
+
+De 68 erros para 0 erros com configuração adequada do tsconfig.json.
+
+Contextos Async (NotificationContext, etc.) foram protegidos com try/catch para evitar crash.
+
+Carregamento de dados pesado (Bíblia 3.9MB) foi tornado async, para não bloquear a thread principal.
+
+Testes finais mostraram que a Bíblia carrega corretamente, apenas quando a tela é aberta.
+
+Problemas atuais
+
+Apesar das correções, o app ainda não funciona corretamente:
+
+Ao abrir o app, a splash screen aparece e carrega 100%, mas logo aparece uma tela de erro e o app fecha sozinho.
+
+Códigos HTML ou cores (#A78BFA) aparecem na parte superior e inferior da tela – devem ser ocultos.
+
+Há falhas contínuas de inicialização e crash ao carregar módulos JS (erros com RCTEventEmitter.receiveTouches() e problemas de registro de módulos).
+
+Problemas de compatibilidade com Expo Go e versões de SDK (51 vs 54).
+
+Necessidade de garantir que todas as dependências e plugins Babel, TypeScript, Expo, React Native e módulos nativos estejam corretos e funcionando.
+
+O que precisamos que você faça
+
+Revisão profunda do projeto, analisando todos os crashes, erros de inicialização e problemas de compatibilidade.
+
+Corrigir todos os problemas que fazem o app crashar, garantindo que o app abra, carregue a tela principal e funcione normalmente.
+
+Ajustar o carregamento de dados e módulos para que a UI não trave e o app não feche.
+
+Ocultar qualquer informação sensível ou códigos visíveis na tela (#A78BFA ou outros).
+
+Validar o TypeScript, Babel, Expo, React Native e dependências nativas.
+
+Preparar o projeto pronto para gerar APK localmente, usando gradlew assembleRelease.
+
+Se houver algo que não puder ser corrigido, explique claramente e sugira alternativas viáveis e realistas.
+
+Objetivo final
+
+Entregar um app funcional, estável e pronto para produção, que possa ser gerado como APK localmente.
+
+Todas as telas devem funcionar, incluindo a Home, Bíblia e qualquer outra funcionalidade, sem crash.

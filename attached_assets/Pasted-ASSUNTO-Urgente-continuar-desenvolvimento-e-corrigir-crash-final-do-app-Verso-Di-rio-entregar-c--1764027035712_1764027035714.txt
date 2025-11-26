@@ -1,0 +1,117 @@
+ASSUNTO: Urgente — continuar desenvolvimento e corrigir crash final do app Verso Diário (entregar código 100% pronto para gerar APK local)
+
+Olá — vou subir o ZIP do projeto Verso Diário. Preciso que atuem como arquiteto de software + engenheiro sênior React Native / Expo e continuem o desenvolvimento exatamente de onde parou, sem quebrar nada existente, até entregar o código final pronto para gerar o APK localmente (Windows) sem crashes nem bugs.
+
+Abaixo explico como era o app, o que já fizemos, o erro atual e o que precisa ser feito.
+
+1) COMO ERA O APP (visão geral)
+
+O app é a versão mobile do site/versão web Verso Diário. Deve preservar identidade visual (cores, ícones, emojis 🕊️), layout adaptado para mobile e funcionalidades da web. Principais módulos previstos: Verso do Dia, Devocionais, Bíblia (ACF) com TTS, Hinário com player, Anotações, Calendário, Alarmes/Notificações, Loja, Perfil/Configurações, Favoritos.
+
+2) O QUE JÁ FOI FEITO (estado atual do repositório)
+
+✅ Imports corrigidos: todos os @/ foram substituídos por caminhos relativos (resolvido para build nativo).
+✅ Estrutura de pastas organizada: app/, components/, contexts/, data/, assets/, utils/.
+✅ Assets criados: icon.png, splash.png, background gradient, sons iniciais (bells, chimes, piano etc.).
+✅ Telas e componentes implementados (parcialmente): navegação por tabs, bible-reader.tsx, app/(tabs)/bible.tsx, app/(tabs)/hymnal.tsx, hymn-player.tsx, contextos principais e AsyncStorage para favoritos.
+✅ Metro bundler corrigido e babel-plugin-module-resolver instalado quando faltava; babel.config.js já configurado.
+✅ Pré-build (npx expo prebuild) e criação da pasta android/ executados com sucesso.
+✅ assembleRelease chegou a rodar (APK gerado), mas crasha em runtime após splash.
+
+3) ERRO ATUAL
+
+O APK abre, mostra splash, e fecha sozinho (erro JS em runtime).
+
+Testes realizados: npm install --legacy-peer-deps, npx expo prebuild --clean, cd android && .\gradlew clean && .\gradlew assembleRelease.
+
+Logs anteriores mostravam “Cannot find module 'babel-plugin-module-resolver'” — resolvido.
+
+Crash indica problema em runtime (JS): import não resolvido, JSON malformado, rota ou contexto faltante.
+
+4) CORREÇÕES JÁ APLICADAS (não suficientes)
+
+Substituição de aliases @/ por caminhos relativos.
+
+Instalação de babel-plugin-module-resolver e limpeza do cache.
+
+Assets criados e verificados.
+
+Prebuild e limpeza do Gradle executados.
+
+Mesmo assim, o crash ocorre, portanto é erro de runtime JS.
+
+5) O QUE DEVE SER FEITO (passo a passo)
+A — Diagnóstico imediato (prioridade máxima)
+
+Reproduzir crash em ambiente de desenvolvimento.
+
+Gerar APK de debug com logs habilitados ou rodar no emulador.
+
+Capturar stack trace completo (erro JS/exception).
+
+Identificar arquivo e linha causadora da exceção (ex.: App.tsx, _layout.tsx, Home, JSON, contexto, import nativo).
+
+Criar planilha ou lista de arquivos suspeitos para análise.
+
+B — Correção do problema raiz
+
+Corrigir imports faltantes e componentes retornando undefined.
+
+Proteger useEffect/init com try/catch e checks.
+
+Corrigir leitura de JSON inválida ou síncrona que cause throw.
+
+Garantir que todas as rotas do expo-router (ou stack/tab fallback) existam.
+
+Validar todos os contexts: provider e fallback corretos.
+
+Testar no emulador e APK debug; primeira tela deve renderizar sem crash.
+
+C — Entregáveis obrigatórios
+
+Commitar em branch fix/runtime-crash.
+
+Checklist de mudanças (arquivos alterados + resumo).
+
+Instruções exatas de build local (Windows) no README/INSTRUCOES_APK.md:
+
+npm install --legacy-peer-deps
+npx expo prebuild --clean --platform android
+cd android
+.\gradlew clean
+.\gradlew assembleRelease
+
+
+Entregar APK debug (com logs) e APK release (corrigido) ou confirmar que o APK local não crashará.
+
+6) FINALIZAÇÃO E TESTES
+
+Eu vou baixar o ZIP/branch, rodar build local, instalar APK e testar: splash → primeira tela.
+
+Se abrir sem crash, considerar entregue.
+
+Se crashar, envio adb logcat e espero correção final.
+
+7) REGRAS DE TRABALHO
+
+Não remover funcionalidades existentes.
+
+Não adicionar dependências web-only.
+
+Manter compatibilidade React Native + react-native-reanimated (Babel).
+
+Mensagens de commit claras.
+
+Sempre responder: resumo do que foi feito → arquivos alterados → próximos passos.
+
+8) OBSERVAÇÕES TÉCNICAS
+
+JSONs grandes (data/bible-acf.json) devem ser carregados com require/streaming.
+
+Validar imports relativos após refatoração.
+
+useEffect/init protegidos com try/catch.
+
+Assets referenciados existem em assets/ e app.json aponta splash e icon corretamente.
+
+Expo-router: compatibilidade release, fallback para @react-navigation/native se necessário.

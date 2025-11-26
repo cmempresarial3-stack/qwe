@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "ChristianApp",
+    "slug": "christian-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Esta permissão é necessária para permitir que você adicione uma foto de perfil.",
+          "cameraPermission": "Esta permissão é necessária para permitir que você tire uma foto de perfil."
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.christianapp.faithcompanion"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.christianapp.faithcompanion",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "color": "#0070f3"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id-here"
+      }
+    }
+  }
+}

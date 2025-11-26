@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Modal, Switch, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Modal, Switch, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { useTheme } from '../contexts/ThemeContext';
+import { Audio } from 'expo-av';
 
 interface Alarm {
   id: string;
@@ -15,12 +16,18 @@ interface Alarm {
   days: number[];
 }
 
+interface PresetAlarm {
+  enabled: boolean;
+  time: string;
+  soundId: string;
+}
+
 const SOUNDS = [
-  { id: 'default', name: 'Padrão' },
-  { id: 'bells', name: 'Sinos' },
-  { id: 'chimes', name: 'Carrilhão' },
   { id: 'gentle', name: 'Suave' },
-  { id: 'piano', name: 'Piano' },
+  { id: 'morning', name: 'Manhã' },
+  { id: 'peaceful', name: 'Pacífico' },
+  { id: 'worship', name: 'Adoração' },
+  { id: 'nature', name: 'Natureza' },
 ];
 
 const DAYS = [
@@ -34,25 +41,53 @@ const DAYS = [
 ];
 
 export default function AlarmsScreen() {
-  const { isDark } = useTheme();
+  const { themeColors } = useTheme();
   const router = useRouter();
+  
+  const [morningAlarm, setMorningAlarm] = useState<PresetAlarm>({
+    enabled: false,
+    time: '07:00',
+    soundId: 'morning',
+  });
+  
+  const [nightAlarm, setNightAlarm] = useState<PresetAlarm>({
+    enabled: false,
+    time: '21:00',
+    soundId: 'peaceful',
+  });
+  
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
   const [time, setTime] = useState('08:00');
   const [message, setMessage] = useState('');
-  const [selectedSound, setSelectedSound] = useState('default');
+  const [selectedSound, setSelectedSound] = useState('gentle');
   const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]);
+  const [testingSound, setTestingSound] = useState<string | null>(null);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
   useEffect(() => {
     loadAlarms();
+    loadPresetAlarms();
     requestPermissions();
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
   }, []);
 
   const requestPermissions = async () => {
-    const { status } = await Notifications.requestPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Você precisa permitir notificações para usar os alarmes!');
+    try {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permissão necessária',
+          'Para receber lembretes, é necessário permitir notificações.'
+        );
+      }
+    } catch (error) {
+      console.error('Error requesting permissions:', error);
     }
   };
 
@@ -67,12 +102,130 @@ export default function AlarmsScreen() {
     }
   };
 
+  const loadPresetAlarms = async () => {
+    try {
+      const morningStored = await AsyncStorage.getItem('morningPresetAlarm');
+      const nightStored = await AsyncStorage.getItem('nightPresetAlarm');
+      
+      if (morningStored) setMorningAlarm(JSON.parse(morningStored));
+      if (nightStored) setNightAlarm(JSON.parse(nightStored));
+    } catch (error) {
+      console.error('Error loading preset alarms:', error);
+    }
+  };
+
   const saveAlarms = async (newAlarms: Alarm[]) => {
     try {
       await AsyncStorage.setItem('alarms', JSON.stringify(newAlarms));
       setAlarms(newAlarms);
     } catch (error) {
       console.error('Error saving alarms:', error);
+    }
+  };
+
+  const savePresetAlarm = async (type: 'morning' | 'night', config: PresetAlarm) => {
+    try {
+      await AsyncStorage.setItem(`${type}PresetAlarm`, JSON.stringify(config));
+      
+      if (config.enabled) {
+        await schedulePresetNotification(type, config);
+      } else {
+        await cancelPresetNotification(type);
+      }
+    } catch (error) {
+      console.error('Error saving preset alarm:', error);
+    }
+  };
+
+  const schedulePresetNotification = async (type: 'morning' | 'night', config: PresetAlarm) => {
+    try {
+      await Notifications.cancelScheduledNotificationAsync(`preset-${type}`);
+      
+      const [hours, minutes] = config.time.split(':').map(Number);
+      
+      const title = type === 'morning' ? 'Bom dia! ☀️' : 'Boa noite! 🌙';
+      const body = type === 'morning' 
+        ? 'Que tal começar o dia lendo o verso diário?'
+        : 'Hora de um momento de reflexão antes de dormir.';
+      
+      await Notifications.scheduleNotificationAsync({
+        identifier: `preset-${type}`,
+        content: {
+          title,
+          body,
+          sound: true,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          hour: hours,
+          minute: minutes,
+        },
+      });
+    } catch (error) {
+      console.error('Error scheduling preset notification:', error);
+    }
+  };
+
+  const cancelPresetNotification = async (type: 'morning' | 'night') => {
+    try {
+      await Notifications.cancelScheduledNotificationAsync(`preset-${type}`);
+    } catch (error) {
+      console.error('Error canceling preset notification:', error);
+    }
+  };
+
+  const togglePresetAlarm = async (type: 'morning' | 'night') => {
+    if (type === 'morning') {
+      const newConfig = { ...morningAlarm, enabled: !morningAlarm.enabled };
+      setMorningAlarm(newConfig);
+      await savePresetAlarm('morning', newConfig);
+    } else {
+      const newConfig = { ...nightAlarm, enabled: !nightAlarm.enabled };
+      setNightAlarm(newConfig);
+      await savePresetAlarm('night', newConfig);
+    }
+  };
+
+  const updatePresetTime = async (type: 'morning' | 'night', newTime: string) => {
+    if (type === 'morning') {
+      const newConfig = { ...morningAlarm, time: newTime };
+      setMorningAlarm(newConfig);
+      await savePresetAlarm('morning', newConfig);
+    } else {
+      const newConfig = { ...nightAlarm, time: newTime };
+      setNightAlarm(newConfig);
+      await savePresetAlarm('night', newConfig);
+    }
+  };
+
+  const testSound = async (soundId: string) => {
+    try {
+      if (sound) {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+      }
+      
+      if (testingSound === soundId) {
+        setTestingSound(null);
+        setSound(null);
+        return;
+      }
+      
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        require('../assets/sounds/gentle.wav'),
+        { shouldPlay: true }
+      );
+      
+      setSound(newSound);
+      setTestingSound(soundId);
+      
+      newSound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          setTestingSound(null);
+        }
+      });
+    } catch (error) {
+      console.error('Error testing sound:', error);
     }
   };
 
@@ -86,13 +239,13 @@ export default function AlarmsScreen() {
         content: {
           title: '🕊️ Verso Diário',
           body: alarm.message,
-          sound: alarm.sound !== 'default' ? `${alarm.sound}.wav` : undefined,
+          sound: true,
         },
         trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
           weekday: day + 1,
           hour: hours,
           minute: minutes,
-          repeats: true,
         },
       });
     }
@@ -100,7 +253,7 @@ export default function AlarmsScreen() {
 
   const saveAlarm = async () => {
     if (!time || !message.trim()) {
-      alert('Preencha todos os campos!');
+      Alert.alert('Atenção', 'Preencha todos os campos!');
       return;
     }
 
@@ -161,7 +314,7 @@ export default function AlarmsScreen() {
       setEditingAlarm(null);
       setTime('08:00');
       setMessage('');
-      setSelectedSound('default');
+      setSelectedSound('gentle');
       setSelectedDays([1, 2, 3, 4, 5]);
     }
     setModalVisible(true);
@@ -189,64 +342,140 @@ export default function AlarmsScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#111827' : '#F9FAFB' }]}>
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
+      <View style={[styles.header, { backgroundColor: themeColors.card, borderBottomColor: themeColors.border }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : '#111827'} />
+          <Ionicons name="arrow-back" size={24} color={themeColors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+        <Text style={[styles.headerTitle, { color: themeColors.text }]}>
           Alarmes
         </Text>
         <View style={{ width: 40 }} />
       </View>
 
       <ScrollView style={styles.content}>
+        {/* Preset Alarms */}
+        <Text style={[styles.sectionTitle, { color: themeColors.textSecondary }]}>
+          Alarmes Rápidos
+        </Text>
+
+        {/* Morning Alarm */}
+        <View style={[styles.presetCard, { backgroundColor: themeColors.card }]}>
+          <View style={styles.presetHeader}>
+            <View style={[styles.presetIcon, { backgroundColor: '#FEF3C7' }]}>
+              <Ionicons name="sunny" size={28} color="#F59E0B" />
+            </View>
+            <View style={styles.presetInfo}>
+              <Text style={[styles.presetTitle, { color: themeColors.text }]}>
+                Alarme da Manhã
+              </Text>
+              <Text style={[styles.presetSubtitle, { color: themeColors.textSecondary }]}>
+                Comece o dia com a Palavra
+              </Text>
+            </View>
+            <Switch
+              value={morningAlarm.enabled}
+              onValueChange={() => togglePresetAlarm('morning')}
+              trackColor={{ false: '#D1D5DB', true: themeColors.primary }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <View style={styles.presetTimeRow}>
+            <Ionicons name="time-outline" size={20} color={themeColors.textSecondary} />
+            <TextInput
+              style={[styles.timeInput, { color: themeColors.text, borderColor: themeColors.border }]}
+              value={morningAlarm.time}
+              onChangeText={(text) => updatePresetTime('morning', text)}
+              placeholder="07:00"
+              placeholderTextColor={themeColors.textSecondary}
+            />
+          </View>
+        </View>
+
+        {/* Night Alarm */}
+        <View style={[styles.presetCard, { backgroundColor: themeColors.card }]}>
+          <View style={styles.presetHeader}>
+            <View style={[styles.presetIcon, { backgroundColor: '#E0E7FF' }]}>
+              <Ionicons name="moon" size={28} color="#6366F1" />
+            </View>
+            <View style={styles.presetInfo}>
+              <Text style={[styles.presetTitle, { color: themeColors.text }]}>
+                Alarme da Noite
+              </Text>
+              <Text style={[styles.presetSubtitle, { color: themeColors.textSecondary }]}>
+                Reflexão antes de dormir
+              </Text>
+            </View>
+            <Switch
+              value={nightAlarm.enabled}
+              onValueChange={() => togglePresetAlarm('night')}
+              trackColor={{ false: '#D1D5DB', true: themeColors.primary }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <View style={styles.presetTimeRow}>
+            <Ionicons name="time-outline" size={20} color={themeColors.textSecondary} />
+            <TextInput
+              style={[styles.timeInput, { color: themeColors.text, borderColor: themeColors.border }]}
+              value={nightAlarm.time}
+              onChangeText={(text) => updatePresetTime('night', text)}
+              placeholder="21:00"
+              placeholderTextColor={themeColors.textSecondary}
+            />
+          </View>
+        </View>
+
+        {/* Custom Alarms */}
+        <Text style={[styles.sectionTitle, { color: themeColors.textSecondary, marginTop: 20 }]}>
+          Alarmes Personalizados
+        </Text>
+
         {alarms.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="alarm-outline" size={64} color={isDark ? '#4B5563' : '#D1D5DB'} />
-            <Text style={[styles.emptyText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
-              Nenhum alarme configurado
+            <Ionicons name="alarm-outline" size={48} color={themeColors.textSecondary} />
+            <Text style={[styles.emptyText, { color: themeColors.textSecondary }]}>
+              Nenhum alarme personalizado
             </Text>
-            <Text style={[styles.emptySubtext, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
-              Toque no botão + para criar seu primeiro alarme
+            <Text style={[styles.emptySubtext, { color: themeColors.textSecondary }]}>
+              Toque no + para criar
             </Text>
           </View>
         ) : (
           alarms.map(alarm => (
-            <View key={alarm.id} style={[styles.alarmCard, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
+            <View key={alarm.id} style={[styles.alarmCard, { backgroundColor: themeColors.card }]}>
               <View style={styles.alarmHeader}>
                 <View style={styles.alarmTimeContainer}>
-                  <Text style={[styles.alarmTime, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+                  <Text style={[styles.alarmTime, { color: themeColors.text }]}>
                     {alarm.time}
                   </Text>
-                  <Text style={[styles.alarmDays, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                  <Text style={[styles.alarmDays, { color: themeColors.textSecondary }]}>
                     {formatDays(alarm.days)}
                   </Text>
                 </View>
                 <Switch
                   value={alarm.enabled}
                   onValueChange={() => toggleAlarm(alarm.id)}
-                  trackColor={{ false: '#D1D5DB', true: '#A78BFA' }}
-                  thumbColor={alarm.enabled ? '#8B5CF6' : '#F3F4F6'}
+                  trackColor={{ false: '#D1D5DB', true: themeColors.primary }}
+                  thumbColor="#FFFFFF"
                 />
               </View>
               
-              <Text style={[styles.alarmMessage, { color: isDark ? '#D1D5DB' : '#4B5563' }]}>
+              <Text style={[styles.alarmMessage, { color: themeColors.textSecondary }]}>
                 {alarm.message}
               </Text>
               
               <View style={styles.alarmFooter}>
                 <View style={styles.alarmSound}>
-                  <Ionicons name="musical-notes" size={16} color={isDark ? '#9CA3AF' : '#6B7280'} />
-                  <Text style={[styles.alarmSoundText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+                  <Ionicons name="musical-notes" size={16} color={themeColors.textSecondary} />
+                  <Text style={[styles.alarmSoundText, { color: themeColors.textSecondary }]}>
                     {SOUNDS.find(s => s.id === alarm.sound)?.name || 'Padrão'}
                   </Text>
                 </View>
                 
                 <View style={styles.alarmActions}>
                   <TouchableOpacity onPress={() => openModal(alarm)} style={styles.actionButton}>
-                    <Ionicons name="create-outline" size={20} color={isDark ? '#9CA3AF' : '#6B7280'} />
+                    <Ionicons name="create-outline" size={20} color={themeColors.textSecondary} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => deleteAlarm(alarm.id)} style={styles.actionButton}>
                     <Ionicons name="trash-outline" size={20} color="#EF4444" />
@@ -256,10 +485,12 @@ export default function AlarmsScreen() {
             </View>
           ))
         )}
+
+        <View style={{ height: 80 }} />
       </ScrollView>
 
       {/* Add Button */}
-      <TouchableOpacity style={styles.fab} onPress={() => openModal()}>
+      <TouchableOpacity style={[styles.fab, { backgroundColor: themeColors.primary }]} onPress={() => openModal()}>
         <Ionicons name="add" size={32} color="#FFFFFF" />
       </TouchableOpacity>
 
@@ -271,75 +502,78 @@ export default function AlarmsScreen() {
         onRequestClose={closeModal}
       >
         <View style={styles.modalContainer}>
-          <ScrollView style={[styles.modalContent, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
+          <ScrollView style={[styles.modalContent, { backgroundColor: themeColors.card }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+              <Text style={[styles.modalTitle, { color: themeColors.text }]}>
                 {editingAlarm ? 'Editar Alarme' : 'Novo Alarme'}
               </Text>
               <TouchableOpacity onPress={closeModal}>
-                <Ionicons name="close" size={24} color={isDark ? '#9CA3AF' : '#6B7280'} />
+                <Ionicons name="close" size={24} color={themeColors.textSecondary} />
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.label, { color: isDark ? '#D1D5DB' : '#4B5563' }]}>Horário</Text>
+            <Text style={[styles.label, { color: themeColors.textSecondary }]}>Horário</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: isDark ? '#374151' : '#F3F4F6', color: isDark ? '#FFFFFF' : '#111827' }]}
+              style={[styles.input, { backgroundColor: themeColors.background, color: themeColors.text }]}
               placeholder="08:00"
-              placeholderTextColor={isDark ? '#6B7280' : '#9CA3AF'}
+              placeholderTextColor={themeColors.textSecondary}
               value={time}
               onChangeText={setTime}
             />
 
-            <Text style={[styles.label, { color: isDark ? '#D1D5DB' : '#4B5563' }]}>Mensagem</Text>
+            <Text style={[styles.label, { color: themeColors.textSecondary }]}>Mensagem</Text>
             <TextInput
-              style={[styles.textArea, { backgroundColor: isDark ? '#374151' : '#F3F4F6', color: isDark ? '#FFFFFF' : '#111827' }]}
+              style={[styles.textArea, { backgroundColor: themeColors.background, color: themeColors.text }]}
               placeholder="Exemplo: Oi! Já orou hoje?"
-              placeholderTextColor={isDark ? '#6B7280' : '#9CA3AF'}
+              placeholderTextColor={themeColors.textSecondary}
               value={message}
               onChangeText={setMessage}
               multiline
               numberOfLines={3}
             />
 
-            <Text style={[styles.label, { color: isDark ? '#D1D5DB' : '#4B5563' }]}>Som</Text>
+            <Text style={[styles.label, { color: themeColors.textSecondary }]}>Som</Text>
             <View style={styles.soundSelector}>
-              {SOUNDS.map(sound => (
+              {SOUNDS.map(s => (
                 <TouchableOpacity
-                  key={sound.id}
+                  key={s.id}
                   style={[
                     styles.soundButton,
-                    selectedSound === sound.id && styles.soundButtonActive,
-                    { backgroundColor: selectedSound === sound.id ? '#8B5CF6' : (isDark ? '#374151' : '#F3F4F6') }
+                    { backgroundColor: selectedSound === s.id ? themeColors.primary : themeColors.background }
                   ]}
-                  onPress={() => setSelectedSound(sound.id)}
+                  onPress={() => setSelectedSound(s.id)}
                 >
                   <Text style={[
                     styles.soundButtonText,
-                    selectedSound === sound.id && styles.soundButtonTextActive,
-                    { color: selectedSound === sound.id ? '#FFFFFF' : (isDark ? '#D1D5DB' : '#4B5563') }
+                    { color: selectedSound === s.id ? '#FFFFFF' : themeColors.text }
                   ]}>
-                    {sound.name}
+                    {s.name}
                   </Text>
+                  <TouchableOpacity onPress={() => testSound(s.id)} style={styles.testBtn}>
+                    <Ionicons 
+                      name={testingSound === s.id ? "stop" : "play"} 
+                      size={16} 
+                      color={selectedSound === s.id ? '#FFFFFF' : themeColors.primary} 
+                    />
+                  </TouchableOpacity>
                 </TouchableOpacity>
               ))}
             </View>
 
-            <Text style={[styles.label, { color: isDark ? '#D1D5DB' : '#4B5563' }]}>Repetir</Text>
+            <Text style={[styles.label, { color: themeColors.textSecondary }]}>Repetir</Text>
             <View style={styles.daysSelector}>
               {DAYS.map(day => (
                 <TouchableOpacity
                   key={day.id}
                   style={[
                     styles.dayButton,
-                    selectedDays.includes(day.id) && styles.dayButtonActive,
-                    { backgroundColor: selectedDays.includes(day.id) ? '#8B5CF6' : (isDark ? '#374151' : '#F3F4F6') }
+                    { backgroundColor: selectedDays.includes(day.id) ? themeColors.primary : themeColors.background }
                   ]}
                   onPress={() => toggleDay(day.id)}
                 >
                   <Text style={[
                     styles.dayButtonText,
-                    selectedDays.includes(day.id) && styles.dayButtonTextActive,
-                    { color: selectedDays.includes(day.id) ? '#FFFFFF' : (isDark ? '#D1D5DB' : '#4B5563') }
+                    { color: selectedDays.includes(day.id) ? '#FFFFFF' : themeColors.text }
                   ]}>
                     {day.name}
                   </Text>
@@ -349,13 +583,13 @@ export default function AlarmsScreen() {
 
             <View style={styles.modalActions}>
               <TouchableOpacity
-                style={[styles.modalButton, styles.modalButtonCancel]}
+                style={[styles.modalButton, { backgroundColor: themeColors.background }]}
                 onPress={closeModal}
               >
-                <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
+                <Text style={[styles.modalButtonTextCancel, { color: themeColors.text }]}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButton, styles.modalButtonSave]}
+                style={[styles.modalButton, { backgroundColor: themeColors.primary }]}
                 onPress={saveAlarm}
               >
                 <Text style={styles.modalButtonTextSave}>Salvar</Text>
@@ -380,7 +614,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   backButton: {
     width: 40,
@@ -395,27 +628,70 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  presetCard: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+  },
+  presetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  presetIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  presetInfo: {
+    flex: 1,
+  },
+  presetTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
+  presetSubtitle: {
+    fontSize: 13,
+  },
+  presetTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  timeInput: {
+    flex: 1,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    fontSize: 16,
+  },
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 60,
+    paddingVertical: 40,
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 12,
   },
   emptySubtext: {
-    fontSize: 14,
-    marginTop: 8,
-    textAlign: 'center',
+    fontSize: 13,
+    marginTop: 4,
   },
   alarmCard: {
     padding: 16,
     borderRadius: 16,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
   },
   alarmHeader: {
     flexDirection: 'row',
@@ -427,12 +703,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   alarmTime: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   alarmDays: {
-    fontSize: 14,
+    fontSize: 13,
   },
   alarmMessage: {
     fontSize: 14,
@@ -449,7 +725,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   alarmSoundText: {
-    fontSize: 14,
+    fontSize: 13,
   },
   alarmActions: {
     flexDirection: 'row',
@@ -465,7 +741,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#8B5CF6',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
@@ -517,19 +792,18 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   soundButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
-  },
-  soundButtonActive: {
-    backgroundColor: '#8B5CF6',
   },
   soundButtonText: {
     fontSize: 14,
     fontWeight: '600',
   },
-  soundButtonTextActive: {
-    color: '#FFFFFF',
+  testBtn: {
+    padding: 4,
   },
   daysSelector: {
     flexDirection: 'row',
@@ -537,19 +811,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   dayButton: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 8,
   },
-  dayButtonActive: {
-    backgroundColor: '#8B5CF6',
-  },
   dayButtonText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-  },
-  dayButtonTextActive: {
-    color: '#FFFFFF',
   },
   modalActions: {
     flexDirection: 'row',
@@ -562,14 +830,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
-  modalButtonCancel: {
-    backgroundColor: '#F3F4F6',
-  },
-  modalButtonSave: {
-    backgroundColor: '#8B5CF6',
-  },
   modalButtonTextCancel: {
-    color: '#4B5563',
     fontWeight: 'bold',
     fontSize: 16,
   },

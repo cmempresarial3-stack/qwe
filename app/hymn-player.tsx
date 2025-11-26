@@ -1,165 +1,130 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Audio } from 'expo-av';
-import Slider from '@react-native-community/slider';
 import { useTheme } from '../contexts/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HYMNS_DATA: Record<number, { title: string; lyrics: string[] }> = {
-  1: {
-    title: "Chuvas de Bênçãos",
-    lyrics: [
-      "Chuvas de bênção teremos,",
-      "Gotas ao redor, já temos nós;",
-      "Mas as torrentes nos prometem,",
-      "Chuvas de bênção, das chuvas é senhor.",
-      "",
-      "Coro:",
-      "Chuvas de graça, chuvas mil;",
-      "Eis o que esperamos, de Jesus, o Rei gentil.",
-    ]
-  },
-  2: {
-    title: "Saudai o Nome de Jesus",
-    lyrics: [
-      "Saudai o nome de Jesus,",
-      "Arcanjos prostrai-vos;",
-      "Ao Rei dos reis, dai louvor,",
-      "Ao Rei dos reis, coroai-O.",
-      "",
-      "Coro:",
-      "Oh, glorioso Rei, oh, glorioso Rei!",
-      "Nós te coroamos, Rei dos reis e Senhor.",
-    ]
-  },
-  3: {
-    title: "Castelo Forte",
-    lyrics: [
-      "Castelo forte é o nosso Deus,",
-      "Espada e bom escudo;",
-      "Com seu poder defende os Seus",
-      "Em todo o trance agudo.",
-    ]
-  },
-  4: {
-    title: "Vencendo Vem Jesus",
-    lyrics: [
-      "Vencendo vem Jesus,",
-      "Vencendo vem Jesus,",
-      "Quebrado já por Ele, ",
-      "Poder das trevas luz!",
-    ]
-  },
-  5: {
-    title: "Vem, Pecador",
-    lyrics: [
-      "Vem a Cristo, ó pecador,",
-      "Ele salvar-te pode;",
-      "Só Jesus, o Salvador,",
-      "Teu peso pode aliviar.",
-      "",
-      "Coro:",
-      "Vem, pecador, vem te salvar,",
-      "Cristo morreu pra te libertar;",
-    ]
-  },
-  6: {
-    title: "Paz Divina",
-    lyrics: [
-      "Paz divina eu tenho no coração,",
-      "Paz que excede todo o entendimento;",
-      "Paz que só Jesus pode dar.",
-    ]
-  },
-  7: {
-    title: "Mais Perto da Tua Cruz",
-    lyrics: [
-      "Mais perto quero estar,",
-      "Meu Deus, de Ti!",
-      "Inda que seja a dor",
-      "Que me una a Ti.",
-    ]
-  },
-  8: {
-    title: "Olhai Pro Cordeiro de Deus",
-    lyrics: [
-      "Olhai pro Cordeiro de Deus,",
-      "Oh, pecador, olhai e viverá!",
-      "Olhai agora mesmo;",
-      "Só olhai e viverá!",
-    ]
-  },
-  9: {
-    title: "Oração de Consagração",
-    lyrics: [
-      "Toma minha vida, ó Deus,",
-      "E consagra-a a Ti, Senhor;",
-      "Toma os meus momentos, Meu Jesus,",
-      "E sejam sempre Teus.",
-    ]
-  },
-  10: {
-    title: "Grandioso és Tu",
-    lyrics: [
-      "Senhor, meu Deus, quando eu maravilhado,",
-      "Contemplo a tua imensa criação,",
-      "O céu, a terra, o mar e as criaturas,",
-      "Que em todo o mundo habitação!",
-    ]
-  },
-};
+const HYMNS_DATA = require('../data/hymns.json');
 
-// Fallback for missing hymns
-const getFallbackHymn = (number: number) => ({
-  title: `Hino ${number}`,
-  lyrics: [
-    `Letra do Hino ${number} não disponível.`,
-    "",
-    "Este conteúdo será adicionado em breve.",
-    "Harpa Cristã - Hinário Evangélico",
-  ]
-});
+function parseHymnLyrics(hymnData: any): string[] {
+  if (!hymnData) return ['Letra não disponível'];
+  
+  const lines: string[] = [];
+  
+  if (hymnData.verses) {
+    const verseKeys = Object.keys(hymnData.verses).sort((a, b) => parseInt(a) - parseInt(b));
+    
+    for (const key of verseKeys) {
+      const verse = hymnData.verses[key];
+      lines.push(`${key}.`);
+      const verseLines = verse.split('<br>').map((l: string) => l.trim()).filter((l: string) => l);
+      lines.push(...verseLines);
+      lines.push('');
+    }
+  }
+  
+  if (hymnData.coro) {
+    lines.push('Coro:');
+    const coroLines = hymnData.coro.split('<br>').map((l: string) => l.trim()).filter((l: string) => l);
+    lines.push(...coroLines);
+    lines.push('');
+  }
+  
+  return lines.length > 0 ? lines : ['Letra não disponível'];
+}
 
 export default function HymnPlayerScreen() {
-  const { isDark } = useTheme();
+  const { isDark, themeColors } = useTheme();
   const router = useRouter();
   const params = useLocalSearchParams();
   
   const hymnNumber = parseInt(params.number as string) || 1;
-  const hymn = HYMNS_DATA[hymnNumber] || getFallbackHymn(hymnNumber);
+  const hymnData = HYMNS_DATA[hymnNumber.toString()];
+  const hymnTitle = hymnData?.hino?.split(' - ')[1] || `Hino ${hymnNumber}`;
+  const lyrics = parseHymnLyrics(hymnData);
   
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [position, setPosition] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [fontSize, setFontSize] = useState(18);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+    loadFontSize();
+    checkFavorite();
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const loadFontSize = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('hymnFontSize');
+      if (stored) {
+        setFontSize(parseInt(stored));
+      }
+    } catch (error) {
+      console.error('Error loading font size:', error);
+    }
+  };
+
+  const saveFontSize = async (size: number) => {
+    try {
+      await AsyncStorage.setItem('hymnFontSize', size.toString());
+    } catch (error) {
+      console.error('Error saving font size:', error);
+    }
+  };
+
+  const checkFavorite = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('hymnFavorites');
+      if (stored) {
+        const favorites = JSON.parse(stored);
+        setIsFavorite(favorites.includes(hymnNumber));
+      }
+    } catch (error) {
+      console.error('Error checking favorite:', error);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('hymnFavorites');
+      let favorites = stored ? JSON.parse(stored) : [];
+      
+      if (isFavorite) {
+        favorites = favorites.filter((f: number) => f !== hymnNumber);
+      } else {
+        favorites.push(hymnNumber);
+      }
+      
+      await AsyncStorage.setItem('hymnFavorites', JSON.stringify(favorites));
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
+  const changeFontSize = async (delta: number) => {
+    const newSize = Math.min(28, Math.max(14, fontSize + delta));
+    setFontSize(newSize);
+    await saveFontSize(newSize);
+  };
 
   const loadAudio = async () => {
     try {
       const { sound: newSound } = await Audio.Sound.createAsync(
         require('../assets/sounds/gentle.wav'),
-        { shouldPlay: false },
-        onPlaybackStatusUpdate
+        { shouldPlay: true, isLooping: true }
       );
       setSound(newSound);
+      setIsPlaying(true);
     } catch (error) {
       console.error('Error loading audio:', error);
-    }
-  };
-
-  const onPlaybackStatusUpdate = (status: any) => {
-    if (status.isLoaded) {
-      setPosition(status.positionMillis || 0);
-      setDuration(status.durationMillis || 0);
-      setIsPlaying(status.isPlaying);
     }
   };
 
@@ -171,113 +136,114 @@ export default function HymnPlayerScreen() {
 
     if (isPlaying) {
       await sound.pauseAsync();
+      setIsPlaying(false);
     } else {
       await sound.playAsync();
+      setIsPlaying(true);
     }
   };
 
-  const seekTo = async (value: number) => {
-    if (sound) {
-      await sound.setPositionAsync(value);
+  const shareHymn = async () => {
+    const lyricsText = lyrics.filter(l => l !== '').join('\n');
+    const text = `${hymnTitle}\nHarpa Cristã - Nº ${hymnNumber}\n\n${lyricsText}\n\n🕊️ Verso Diário`;
+    
+    try {
+      await Share.share({ message: text });
+    } catch (error) {
+      console.error('Error sharing:', error);
     }
   };
-
-  const formatTime = (millis: number) => {
-    const totalSeconds = Math.floor(millis / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#111827' : '#F9FAFB' }]}>
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
+      <View style={[styles.header, { backgroundColor: themeColors.card, borderBottomColor: themeColors.border }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : '#111827'} />
+          <Ionicons name="arrow-back" size={24} color={themeColors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+        <Text style={[styles.headerTitle, { color: themeColors.text }]} numberOfLines={1}>
           Hino {hymnNumber}
         </Text>
-        <View style={{ width: 40 }} />
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={toggleFavorite} style={styles.headerBtn}>
+            <Ionicons 
+              name={isFavorite ? 'heart' : 'heart-outline'} 
+              size={22} 
+              color={isFavorite ? '#EF4444' : themeColors.textSecondary} 
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={shareHymn} style={styles.headerBtn}>
+            <Ionicons name="share-outline" size={22} color={themeColors.textSecondary} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Mini Player - Discrete at top */}
+      <View style={[styles.miniPlayer, { backgroundColor: themeColors.card, borderBottomColor: themeColors.border }]}>
+        <TouchableOpacity
+          style={[styles.miniPlayBtn, { backgroundColor: themeColors.primary }]}
+          onPress={togglePlayPause}
+        >
+          <Ionicons
+            name={isPlaying ? "pause" : "play"}
+            size={18}
+            color="#FFFFFF"
+          />
+        </TouchableOpacity>
+        <Text style={[styles.miniPlayerText, { color: themeColors.textSecondary }]}>
+          {isPlaying ? 'Tocando instrumental...' : 'Tocar instrumental'}
+        </Text>
+        <View style={styles.fontSizeControl}>
+          <TouchableOpacity onPress={() => changeFontSize(-2)} style={styles.fontBtn}>
+            <Ionicons name="remove-circle-outline" size={22} color={themeColors.textSecondary} />
+          </TouchableOpacity>
+          <Text style={[styles.fontSizeText, { color: themeColors.textSecondary }]}>
+            A
+          </Text>
+          <TouchableOpacity onPress={() => changeFontSize(2)} style={styles.fontBtn}>
+            <Ionicons name="add-circle-outline" size={22} color={themeColors.textSecondary} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Lyrics */}
       <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-        <Text style={[styles.hymnTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
-          {hymn.title}
+        <Text style={[styles.hymnTitle, { color: themeColors.text }]}>
+          {hymnTitle}
         </Text>
-        <Text style={[styles.hymnSubtitle, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+        <Text style={[styles.hymnSubtitle, { color: themeColors.textSecondary }]}>
           Harpa Cristã - Nº {hymnNumber}
         </Text>
         
         <View style={styles.lyricsContainer}>
-          {hymn.lyrics.map((line, index) => (
-            <Text
-              key={index}
-              style={[
-                styles.lyricLine,
-                { color: isDark ? '#E5E7EB' : '#1F2937' },
-                line.startsWith('Coro:') && styles.chorusLine,
-                line === '' && styles.emptyLine,
-              ]}
-            >
-              {line}
-            </Text>
-          ))}
+          {lyrics.map((line, index) => {
+            const isVerseNumber = /^\d+\.$/.test(line);
+            const isCoro = line === 'Coro:';
+            const isEmpty = line === '';
+            
+            return (
+              <Text
+                key={index}
+                style={[
+                  styles.lyricLine,
+                  { color: themeColors.text, fontSize },
+                  isVerseNumber && styles.verseNumberLine,
+                  isCoro && [styles.coroLine, { color: themeColors.primary }],
+                  isEmpty && styles.emptyLine,
+                ]}
+              >
+                {line}
+              </Text>
+            );
+          })}
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>
+            Harpa Cristã - Hinário Evangélico
+          </Text>
         </View>
       </ScrollView>
-
-      {/* Player Controls */}
-      <View style={[styles.playerContainer, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
-        {/* Progress Bar */}
-        <View style={styles.progressContainer}>
-          <Text style={[styles.timeText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
-            {formatTime(position)}
-          </Text>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={duration}
-            value={position}
-            onSlidingComplete={seekTo}
-            minimumTrackTintColor="#8B5CF6"
-            maximumTrackTintColor={isDark ? '#374151' : '#E5E7EB'}
-            thumbTintColor="#8B5CF6"
-          />
-          <Text style={[styles.timeText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
-            {formatTime(duration)}
-          </Text>
-        </View>
-
-        {/* Playback Controls */}
-        <View style={styles.controls}>
-          <TouchableOpacity style={styles.controlButton}>
-            <Ionicons name="play-skip-back" size={32} color={isDark ? '#9CA3AF' : '#6B7280'} />
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={[styles.playButton, { backgroundColor: '#8B5CF6' }]}
-            onPress={togglePlayPause}
-          >
-            <Ionicons
-              name={isPlaying ? "pause" : "play"}
-              size={36}
-              color="#FFFFFF"
-            />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.controlButton}>
-            <Ionicons name="play-skip-forward" size={32} color={isDark ? '#9CA3AF' : '#6B7280'} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Info */}
-        <Text style={[styles.playerInfo, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
-          Instrumental - Harpa Cristã
-        </Text>
-      </View>
     </View>
   );
 }
@@ -291,10 +257,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 50,
-    paddingBottom: 16,
+    paddingBottom: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   backButton: {
     width: 40,
@@ -302,7 +267,47 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
+    flex: 1,
     fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  headerBtn: {
+    padding: 8,
+  },
+  miniPlayer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    gap: 12,
+  },
+  miniPlayBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  miniPlayerText: {
+    flex: 1,
+    fontSize: 13,
+  },
+  fontSizeControl: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  fontBtn: {
+    padding: 4,
+  },
+  fontSizeText: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
   content: {
@@ -310,9 +315,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 24,
+    paddingBottom: 40,
   },
   hymnTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
@@ -326,70 +332,31 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   lyricLine: {
-    fontSize: 16,
-    lineHeight: 28,
+    lineHeight: 32,
     textAlign: 'center',
   },
-  chorusLine: {
+  verseNumberLine: {
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 4,
+  },
+  coroLine: {
+    fontWeight: 'bold',
     fontStyle: 'italic',
-    fontWeight: '600',
+    marginTop: 16,
+    marginBottom: 4,
   },
   emptyLine: {
-    height: 14,
+    height: 16,
   },
-  playerContainer: {
-    paddingVertical: 24,
-    paddingHorizontal: 20,
+  footer: {
+    marginTop: 40,
+    paddingTop: 20,
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
-  },
-  progressContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
   },
-  slider: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
-  timeText: {
+  footerText: {
     fontSize: 12,
-    fontWeight: '600',
-    minWidth: 40,
-    textAlign: 'center',
-  },
-  controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 40,
-    marginBottom: 16,
-  },
-  controlButton: {
-    padding: 8,
-  },
-  playButton: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-  },
-  playerInfo: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: 16,
   },
 });

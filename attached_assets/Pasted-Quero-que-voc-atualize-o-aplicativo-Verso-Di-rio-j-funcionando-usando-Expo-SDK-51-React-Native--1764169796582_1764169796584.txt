@@ -1,0 +1,355 @@
+Quero que você atualize o aplicativo Verso Diário (já funcionando, usando Expo SDK 51, React Native 0.74.5) adicionando e corrigindo todas as funcionalidades listadas abaixo SEM QUEBRAR NADA QUE JÁ FUNCIONE.
+
+Não altere a estrutura nativa.
+Não modifique android/ ou ios/.
+Não remova funcionalidades já estáveis.
+Apenas adicione, aperfeiçoe e corrigir o que estiver descrito aqui.
+
+A estrutura de pastas atual deve ser mantida, especialmente:
+
+app/(tabs)
+
+app/devotional-view.tsx
+
+contexts/
+
+components/
+
+utils/
+
+⚙️ 1 — Barra inferior (tabs)
+
+Modificar em app/(tabs)/_layout.tsx:
+
+❌ Remover da barra:
+
+Anotações
+
+Calendário
+
+✔️ A barra deve ter exatamente 5 abas:
+
+Início
+
+Bíblia
+
+Hinário
+
+Loja
+
+Configurações
+
+🏠 2 — Aba Início
+✔️ Redes sociais
+
+Substituir as redes sociais atuais pelas mesmas da aba Configurações.
+
+O layout deve ser idêntico ao das Configurações.
+
+✔️ Melhorar card da loja
+
+Na aba Início:
+
+Melhorar o container da loja
+
+Colocar uma frase curta e coerente com o propósito do app
+
+Colocar uma imagem pequena, bonita e coerente com o tema cristão/devocional
+
+📖 3 — Aba Bíblia (melhorias grandes e essenciais)
+✔️ 3.1 — Adicionar seleção de tradução
+
+Adicionar um botão/dropdown no topo:
+
+Ao clicar → abrir lista das traduções disponíveis
+
+Após selecionar → trocar a tradução apresentada
+
+✔️ 3.2 — Navegar capítulos
+
+Os botões Próximo Capítulo e Capítulo Anterior não funcionam corretamente.
+Corrigir para:
+
+Passar capítulo sempre que possível
+
+Voltar capítulo sempre que possível
+
+Impedir travamento entre livros
+
+✔️ 3.3 — Selecionar capítulo no início
+
+Adicionar controle para:
+
+Selecionar o capítulo atual de forma rápida
+
+Pode ser modal, dropdown ou picker
+
+✔️ 3.4 — Sistema de marcação de versos (HIGHLIGHT)
+
+Criar o sistema completo:
+
+Selecionar 1 verso
+
+Selecionar vários versos
+
+4 cores de marcação:
+
+Amarelo
+
+Verde
+
+Azul
+
+Rosa
+
+✔️ Marcação persistente
+
+Versos marcados devem continuar marcados mesmo fechando o app
+
+Usar AsyncStorage
+
+✔️ 3.5 — Enviar versos para Anotações
+
+Depois de marcar versos:
+
+Botão “Salvar verso em Anotações”
+
+Salvar:
+
+referência
+
+texto
+
+cor escolhida
+
+anotação adicionada pelo usuário
+
+Salvar isso na aba Anotações → seção “Versos”.
+
+✔️ 3.6 — Compartilhar versos
+
+Adicionar botão para compartilhar versos selecionados usando a API de compartilhamento do sistema.
+
+🎶 4 — Aba Hinário
+✔️ 4.1 — Tela principal do Hinário
+
+Deve conter:
+
+Favoritos
+
+Recentes
+
+Todos os hinos
+
+✔️ 4.2 — Favoritar hinos
+
+Adicionar botão de favorito.
+
+Salvar no AsyncStorage
+
+Mostrar na seção “Favoritos”
+
+✔️ 4.3 — Recentes
+
+Salvar os últimos 5 hinos visualizados e exibir na aba “Recentes”.
+
+✔️ 4.4 — Hinos completos
+
+As letras estão incompletas.
+Trocar por versões completas usando um JSON ou arquivo local.
+
+✔️ 4.5 — Controle de fonte
+
+Adicionar botões:
+
+Aumentar fonte
+
+Diminuir fonte
+
+Persistência: manter a configuração quando sair/entrar no app.
+
+✔️ 4.6 — Player discreto
+
+O botão play deve ser:
+
+Pequeno
+
+Discreto
+
+Posicionado acima da letra do hino
+
+✔️ 4.7 — Música de fundo (ambiente)
+
+Adicionar seção com 5 músicas para meditação/oração:
+
+Relaxamento
+
+Meditação
+
+Oração
+
+Adoração
+
+Natureza
+
+Com controles básicos (play/pause).
+
+📅 5 — Aba Calendário
+
+Corrigir toda a parte de eventos:
+
+✔️ 5.1 — Criar evento ao clicar no dia
+
+Ao clicar num dia:
+
+Abrir modal
+
+Título + descrição + horário
+
+✔️ 5.2 — Salvar eventos
+
+Salvar no AsyncStorage.
+
+✔️ 5.3 — Notificação no dia e hora correta
+
+Usar expo-notifications.
+
+✔️ 5.4 — Próximos eventos
+
+Criar seção listando os eventos futuros:
+
+Data
+
+Horário
+
+Título
+
+✔️ 5.5 — Dias consecutivos
+
+Exibir contador no final da aba:
+
+Dias consecutivos de leitura/devocional
+
+🛍️ 6 — Loja
+✔️ Primeiro item deve ser um banner grande
+
+Criar card chamativo e sofisticado acima dos outros produtos.
+
+🎨 7 — Temas e Personalização
+
+Adicionar ao app:
+
+Tema padrão
+
+Tema escuro
+
+Tema rosa
+
+Tema amarelo
+
+Todos devem alterar:
+
+Fundo
+
+Abas
+
+Botões
+
+Cores do texto
+
+Destaques
+
+Header
+
+Rodapé
+
+✔️ Nome do app deve mudar cor conforme tema
+
+O título “Verso Diário”, que fica preto no padrão, deve mudar no tema escuro, para ficar visível.
+
+📨 8 — Aba Configurações: adicionar Feedback
+
+Abaixo de “Alarme”, adicionar seção:
+
+Campo para texto
+
+Botão Enviar
+
+Ao enviar → mandar para: cmempresarial3@gmail.com
+
+O email NÃO deve aparecer para o usuário
+
+Pode usar backend simples (POST local) ou método adotado pelo app
+
+🔔 9 — Alarme e Notificações
+
+Corrigir toda essa parte:
+
+✔️ 9.1 — A aba alarmes não abre nada
+
+Deve abrir duas opções:
+
+Alarme da manhã
+
+Alarme da noite
+
+Cada um deve permitir:
+
+Definir horário
+
+Selecionar som
+
+Testar som
+
+✔️ 9.2 — Notificações inteligentes
+
+Corrigir sistema que envia:
+
+Notificação com nome do usuário
+
+Versos do dia
+
+Quiz inteligente
+
+Atualmente não está enviando — corrigir sem quebrar o fluxo.
+
+📚 10 — Bíblia completa + Harpa completa
+✔️ Bíblia deve ter:
+
+Todos os livros
+
+Todos os capítulos
+
+Todos os versos
+
+✔️ Hinário deve ter:
+
+TODOS os hinos completos
+
+Sem cortes
+
+Formatados corretamente
+
+🌅 11 — Devocional diário
+
+O verso do dia + devocional deve:
+
+Fazer sentido com o tema do devocional
+
+Não repetir antes de completar todos
+
+Seguir lista de 150 devocionais
+
+🔧 12 — IMPORTANTE
+
+Tudo deve ser implementado:
+
+Sem quebrar nada já funcional
+
+Sem regredir o projeto
+
+Mantendo Expo funcionando
+
+Mantendo build funcionando
+
+Apenas evoluir e corrigir

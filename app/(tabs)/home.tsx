@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Share } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Share, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useUser } from '../../contexts/UserContext';
@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
   const { userName } = useUser();
-  const { isDark } = useTheme();
+  const { isDark, themeColors } = useTheme();
   const router = useRouter();
   const [verse, setVerse] = useState({ text: '', reference: '' });
   const [isFavorite, setIsFavorite] = useState(false);
@@ -24,7 +24,6 @@ export default function Home() {
     const todayVerse = getTodayVerse();
     setVerse(todayVerse);
     
-    // Check if already favorited
     const favorites = await AsyncStorage.getItem('favoriteVerses');
     if (favorites) {
       const favList = JSON.parse(favorites);
@@ -65,33 +64,51 @@ export default function Home() {
     }
   };
 
+  const openSocialMedia = async (platform: string) => {
+    let url = '';
+    switch (platform) {
+      case 'instagram':
+        url = 'https://instagram.com/versodiario';
+        break;
+      case 'youtube':
+        url = 'https://youtube.com/@versodiario';
+        break;
+      case 'tiktok':
+        url = 'https://tiktok.com/@versodiario';
+        break;
+    }
+    if (url) {
+      await Linking.openURL(url);
+    }
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#111827' : '#F9FAFB' }]}>
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
       {/* Top Bar */}
-      <View style={[styles.topBar, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
-        <Text style={styles.topBarText}>🕊️ Verso Diário</Text>
+      <View style={[styles.topBar, { backgroundColor: themeColors.card, borderBottomColor: themeColors.border }]}>
+        <Text style={[styles.topBarText, { color: themeColors.headerText }]}>🕊️ Verso Diário</Text>
       </View>
 
       <ScrollView style={styles.scrollView}>
         {/* Greeting */}
         <View style={styles.greeting}>
-          <Text style={[styles.greetingText, { color: isDark ? '#E5E7EB' : '#374151' }]}>
+          <Text style={[styles.greetingText, { color: themeColors.text }]}>
             A Paz do Senhor, {userName}
           </Text>
-          <Text style={[styles.greetingSubtext, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+          <Text style={[styles.greetingSubtext, { color: themeColors.textSecondary }]}>
             {greeting}
           </Text>
         </View>
 
         {/* Verso do Dia */}
-        <View style={[styles.card, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
-          <Text style={[styles.cardTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.cardTitle, { color: themeColors.text }]}>
             Verso do Dia
           </Text>
-          <Text style={[styles.verseText, { color: isDark ? '#E5E7EB' : '#374151' }]}>
+          <Text style={[styles.verseText, { color: themeColors.text }]}>
             "{verse.text}"
           </Text>
-          <Text style={[styles.verseReference, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+          <Text style={[styles.verseReference, { color: themeColors.textSecondary }]}>
             {verse.reference}
           </Text>
           <View style={styles.verseActions}>
@@ -99,8 +116,8 @@ export default function Home() {
               <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={24} color="#EF4444" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton} onPress={shareVerse}>
-              <Ionicons name="share-social-outline" size={24} color={isDark ? '#9CA3AF' : '#6B7280'} />
-              <Text style={[styles.actionText, { color: isDark ? '#9CA3AF' : '#6B7280' }]}>
+              <Ionicons name="share-social-outline" size={24} color={themeColors.textSecondary} />
+              <Text style={[styles.actionText, { color: themeColors.textSecondary }]}>
                 Compartilhar
               </Text>
             </TouchableOpacity>
@@ -108,85 +125,126 @@ export default function Home() {
         </View>
 
         {/* Devocional do Dia */}
-        <View style={[styles.card, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}>
-          <Text style={[styles.cardTitle, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.cardTitle, { color: themeColors.text }]}>
             📖 Devocional do Dia
           </Text>
-          <Text style={[styles.devotionalPreview, { color: isDark ? '#D1D5DB' : '#4B5563' }]}>
+          <Text style={[styles.devotionalPreview, { color: themeColors.textSecondary }]}>
             Leia a reflexão completa sobre o verso de hoje e fortaleça sua fé.
           </Text>
           <TouchableOpacity
             style={styles.readButton}
             onPress={() => router.push('/devotional-view')}
           >
-            <Text style={styles.readButtonText}>Ler completo →</Text>
+            <Text style={[styles.readButtonText, { color: themeColors.primary }]}>Ler completo →</Text>
           </TouchableOpacity>
         </View>
 
         {/* Quick Access Grid */}
         <View style={styles.grid}>
           <TouchableOpacity
-            style={[styles.gridItem, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}
+            style={[styles.gridItem, { backgroundColor: themeColors.card }]}
             onPress={() => router.push('/(tabs)/bible')}
           >
-            <Ionicons name="book" size={32} color="#8B5CF6" />
-            <Text style={[styles.gridText, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+            <Ionicons name="book" size={32} color={themeColors.primary} />
+            <Text style={[styles.gridText, { color: themeColors.text }]}>
               Bíblia
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.gridItem, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}
+            style={[styles.gridItem, { backgroundColor: themeColors.card }]}
             onPress={() => router.push('/(tabs)/hymnal')}
           >
-            <Ionicons name="musical-notes" size={32} color="#8B5CF6" />
-            <Text style={[styles.gridText, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+            <Ionicons name="musical-notes" size={32} color={themeColors.primary} />
+            <Text style={[styles.gridText, { color: themeColors.text }]}>
               Hinário
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.gridItem, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}
-            onPress={() => router.push('/notes')}
+            style={[styles.gridItem, { backgroundColor: themeColors.card }]}
+            onPress={() => router.push('/(tabs)/notes')}
           >
-            <Ionicons name="create" size={32} color="#8B5CF6" />
-            <Text style={[styles.gridText, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+            <Ionicons name="create" size={32} color={themeColors.primary} />
+            <Text style={[styles.gridText, { color: themeColors.text }]}>
               Anotações
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.gridItem, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}
-            onPress={() => router.push('/calendar')}
+            style={[styles.gridItem, { backgroundColor: themeColors.card }]}
+            onPress={() => router.push('/(tabs)/calendar')}
           >
-            <Ionicons name="calendar" size={32} color="#8B5CF6" />
-            <Text style={[styles.gridText, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+            <Ionicons name="calendar" size={32} color={themeColors.primary} />
+            <Text style={[styles.gridText, { color: themeColors.text }]}>
               Calendário
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Store and Social Media */}
+        {/* Store Card - Enhanced */}
         <TouchableOpacity
-          style={[styles.horizontalCard, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}
+          style={[styles.storeCard, { backgroundColor: themeColors.card }]}
           onPress={() => router.push('/(tabs)/store')}
         >
-          <Ionicons name="cart" size={24} color="#8B5CF6" />
-          <Text style={[styles.horizontalCardText, { color: isDark ? '#FFFFFF' : '#111827' }]}>
-            Loja
-          </Text>
-          <Ionicons name="chevron-forward" size={20} color={isDark ? '#9CA3AF' : '#6B7280'} />
+          <View style={styles.storeCardContent}>
+            <View style={styles.storeIconContainer}>
+              <Ionicons name="gift" size={40} color={themeColors.primary} />
+            </View>
+            <View style={styles.storeTextContainer}>
+              <Text style={[styles.storeTitle, { color: themeColors.text }]}>
+                Loja Verso Diário
+              </Text>
+              <Text style={[styles.storeSubtitle, { color: themeColors.textSecondary }]}>
+                Produtos que inspiram sua fé e fortalecem sua caminhada espiritual
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={themeColors.textSecondary} />
+          </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.horizontalCard, { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' }]}
-        >
-          <Ionicons name="logo-instagram" size={24} color="#E1306C" />
-          <Text style={[styles.horizontalCardText, { color: isDark ? '#FFFFFF' : '#111827' }]}>
+        {/* Social Media Section - Same as Settings */}
+        <View style={styles.socialSection}>
+          <Text style={[styles.socialTitle, { color: themeColors.textSecondary }]}>
             Redes Sociais
           </Text>
-          <Ionicons name="chevron-forward" size={20} color={isDark ? '#9CA3AF' : '#6B7280'} />
-        </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.socialItem, { backgroundColor: themeColors.card }]}
+            onPress={() => openSocialMedia('instagram')}
+          >
+            <Ionicons name="logo-instagram" size={24} color="#E1306C" />
+            <Text style={[styles.socialText, { color: themeColors.text }]}>
+              Instagram
+            </Text>
+            <Ionicons name="open-outline" size={20} color={themeColors.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.socialItem, { backgroundColor: themeColors.card }]}
+            onPress={() => openSocialMedia('youtube')}
+          >
+            <Ionicons name="logo-youtube" size={24} color="#FF0000" />
+            <Text style={[styles.socialText, { color: themeColors.text }]}>
+              YouTube
+            </Text>
+            <Ionicons name="open-outline" size={20} color={themeColors.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.socialItem, { backgroundColor: themeColors.card }]}
+            onPress={() => openSocialMedia('tiktok')}
+          >
+            <Ionicons name="logo-tiktok" size={24} color={isDark ? '#FFFFFF' : '#000000'} />
+            <Text style={[styles.socialText, { color: themeColors.text }]}>
+              TikTok
+            </Text>
+            <Ionicons name="open-outline" size={20} color={themeColors.textSecondary} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ height: 20 }} />
       </ScrollView>
     </View>
   );
@@ -201,7 +259,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   topBarText: {
     fontSize: 20,
@@ -270,7 +327,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   readButtonText: {
-    color: '#8B5CF6',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -297,23 +353,67 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  horizontalCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  storeCard: {
     marginHorizontal: 16,
-    marginBottom: 12,
-    padding: 16,
-    borderRadius: 12,
+    marginBottom: 16,
+    padding: 20,
+    borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    gap: 12,
   },
-  horizontalCardText: {
+  storeCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  storeIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#F3E8FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  storeTextContainer: {
+    flex: 1,
+  },
+  storeTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  storeSubtitle: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  socialSection: {
+    marginHorizontal: 16,
+    marginTop: 8,
+  },
+  socialTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  socialItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 8,
+    borderRadius: 12,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  socialText: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
   },
 });
